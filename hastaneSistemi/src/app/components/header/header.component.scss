@@ -1,0 +1,60 @@
+.header{
+  padding: 40px;
+  background-color: #9a1b1bd1;
+}
+span{
+  color: rgb(255, 241, 241);
+  font-size: 40px;
+}
+
+.example-spacer{
+  flex:2 2 auto;
+}
+.nav{
+  padding: 30px;
+}
+  nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    position: relative;
+  }
+  
+  nav ul li a {
+    font-size: 18px;
+    display: block;
+    padding: 5px 15px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+  }
+  
+  nav ul li a:hover {
+    background-color: #ffd6d6ec;
+    color: black;
+    width:max-content;
+  }
+  
+  nav ul ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+  
+  nav ul li:hover > ul {
+    display: block;
+  }
+  
+  nav ul ul li {
+    width: 200px;
+  }
+  
+  nav ul ul ul {
+    left: 100%;
+    top: 0;
+  }
+  

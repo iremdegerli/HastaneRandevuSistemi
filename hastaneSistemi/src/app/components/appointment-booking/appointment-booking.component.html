@@ -1,0 +1,44 @@
+<main>
+  <div class="form-body">
+    <div class="row">
+      <div class="form-holder">
+        <div class="form-content">
+          <div class="form-items">
+            <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+              <div class="col-md-12">
+                <input class="form-control" formControlName="name" placeholder="İsim" required>
+              </div>
+              <div class="col-md-12">
+                <input class="form-control" formControlName="surname" placeholder="Soyisim" required>
+              </div>
+              <div class="col-md-12">
+                <input class="form-control" formControlName="identityNumber" placeholder="Kimlik No" required>
+              </div>
+              <div class="col-md-12">
+                <select class="form-select mt-3" formControlName="specialty" required>
+                  <option selected disabled value="">Randevu Almak İstediğiniz Alanı Seçiniz</option>
+                  <option *ngFor="let specialty of specialties" [value]="specialty.id">{{ specialty.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-12">
+                <select class="form-select mt-3" formControlName="doctor" required>
+                  <option selected disabled value="">Randevu Almak İstediğiniz Doktoru Seçiniz</option>
+                  <option *ngFor="let doctor of doctors" [value]="doctor.id">{{ doctor.name }} {{ doctor.surname }}</option>
+                </select>
+              </div>
+              <div class="col-md-12">
+                <br>
+                <label for="appointment">Randevu Tarihi:</label>
+                <input type="datetime-local" formControlName="appointmentDate" required>
+              </div>
+              <div class="form-button mt-3">
+                <button type="submit" class="btn btn-primary" [disabled]="!appointmentForm.valid">Randevu Al</button>
+              </div>
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

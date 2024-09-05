@@ -1,0 +1,33 @@
+<main>
+  <div class="form-body">
+    <div class="row">
+      <div class="form-holder">
+        <div class="form-content">
+          <div class="form-items">
+            <h3>Randevu Bul</h3>
+            <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+              <div class="col-md-12">
+                <input class="form-control" formControlName="identityNumber" placeholder="Kimlik No" required>
+                <div class="valid-feedback">Kimlik no gereklidir!</div>
+                <div class="invalid-feedback">Kimlik no boş bırakılamaz!</div>
+              </div>
+
+              <div class="form-button mt-3">
+                <button id="submit" type="submit" class="btn btn-primary">Ara</button>
+              </div>
+            </form>
+
+            <div *ngIf="appointments.length > 0" class="mt-4">
+              <h4>Randevular:</h4>
+              <ul>
+                <li *ngFor="let appointment of appointments">
+                  {{ appointment.date }} - {{ appointment.doctor.name }} - {{ appointment.specialty.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
