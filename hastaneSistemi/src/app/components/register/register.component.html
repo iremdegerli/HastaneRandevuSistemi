@@ -1,0 +1,73 @@
+<main>
+    <div class="form-body">
+      <div class="row">
+        <div class="form-holder">
+          <div class="form-content">
+            <div class="form-items">
+              <h3>Kayıt Ol</h3>
+              <form>
+                <div class="form-group">
+                    <label>İsim</label>
+                    <input type="text" class="form-control" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" placeholder="İsminizi giriniz">
+                </div>
+
+                <div class="form-group">
+                    <label>Soyisim</label>
+                    <input type="text" class="form-control"  [(ngModel)]="surname" [ngModelOptions]="{standalone: true}" placeholder="Soyisminizi giriniz">
+                </div>
+                
+                <div class="form-group">
+                    <label>Tc Kimlik No</label>
+                    <input type="text" class="form-control" [(ngModel)]="identityNumber" [ngModelOptions]="{standalone: true}" placeholder="Tc kimlik numaranızı giriniz">
+                </div>
+                
+                <div class="form-group">
+                  <label>Email Adresi</label>
+                  <input type="email" class="form-control" [(ngModel)]="email" [ngModelOptions]="{standalone: true}" placeholder="Email adresinizi giriniz">
+                </div>
+
+                <div class="form-group">
+                  <label>Şifre</label>
+                  <input type="password" class="form-control" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" placeholder="Şifrenizi giriniz">
+                </div>
+
+                <div class="form-group">
+                    <label>Yetkinizi Seçiniz:</label>
+                    <select class="form-control" [(ngModel)]="selectedRole" [ngModelOptions]="{ standalone: true }">
+                      <option value="admin">Admin Kaydı</option>
+                      <option value="doctor">Doktor Kaydı</option>
+                    </select>
+                </div>
+                <!-- Specialty Alanı Sadece Doktor Kaydı İçin Gösteriliyor -->
+                <div *ngIf="selectedRole === 'doctor'" class="form-group">
+                    <label>Alan</label>
+                    <select
+                    class="form-control"
+                    [(ngModel)]="specialtyId"
+                    [ngModelOptions]="{ standalone: true }"
+                    >
+                    <option *ngFor="let specialty of specialties" [value]="specialty.id">
+                        {{ specialty.name }}
+                    </option>
+                    </select>
+                </div>
+
+                <br/>
+                <div *ngIf="errorMessage" class="alert alert-danger">
+                  {{ errorMessage }}
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" (click)="save()">Kayıt Ol</button>
+              </form>
+              <br>
+              <p>
+                Hesabınız var mı? <a routerLink="/register">Giriş Yap</a>
+              </p>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  

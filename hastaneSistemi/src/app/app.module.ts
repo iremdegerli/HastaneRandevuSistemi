@@ -18,13 +18,18 @@ import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import { CalendarModule } from '@syncfusion/ej2-angular-calendars';
 import { AppointmentStatusComponent } from './components/appointment-status/appointment-status.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
     AppointmentBookingComponent,
-    AppointmentStatusComponent
+    AppointmentStatusComponent,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -39,7 +44,8 @@ import { AppointmentStatusComponent } from './components/appointment-status/appo
     MatSelectModule,
     MatCardModule,
     MatInputModule,
-    CalendarModule
+    CalendarModule,
+    HttpClientModule
     
   ],
   providers: [
