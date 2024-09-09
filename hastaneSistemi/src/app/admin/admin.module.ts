@@ -6,6 +6,8 @@ import { AdminComponent } from './admin.component';
 import { HeaderAdminComponent } from './components/header-admin/header-admin.component';
 import { PoliklinikAdminComponent } from './components/poliklinik-admin/poliklinik-admin.component';
 import { DoktorAdminComponent } from './components/doktor-admin/doktor-admin.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { HomeAdminComponent } from './components/home-admin/home-admin.component';
 
 
 @NgModule({
@@ -13,11 +15,13 @@ import { DoktorAdminComponent } from './components/doktor-admin/doktor-admin.com
     AdminComponent,
     HeaderAdminComponent,
     PoliklinikAdminComponent,
-    DoktorAdminComponent
+    DoktorAdminComponent,
+    HomeAdminComponent
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    MatToolbarModule
   ]
 })
 export class AdminModule { }

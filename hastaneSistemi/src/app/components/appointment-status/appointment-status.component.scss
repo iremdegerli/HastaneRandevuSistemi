@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;900&display=swap');
+
 *, body {
     font-family: 'Poppins', sans-serif;
     font-weight: 400;
@@ -13,6 +14,10 @@ html, body {
     overflow: hidden;
 }
 
+label{
+    padding-top: 30px;
+    font-size: 18px;
+}
 
 .form-holder {
       display: flex;
@@ -41,8 +46,8 @@ html, body {
 .form-content .form-items {
     border: 3px solid #030000ac;
     background-color: #9a1b1bdc;
-    margin-top: -100px;
-    padding: 40px;
+
+    padding: 50px;
     display: inline-block;
     width: 100%;
     min-width: 540px;
@@ -74,6 +79,7 @@ html, body {
     font-weight: 300;
     line-height: 20px;
     margin-bottom: 30px;
+    
 }
 
 

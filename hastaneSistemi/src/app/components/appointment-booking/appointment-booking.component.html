@@ -4,38 +4,57 @@
       <div class="form-holder">
         <div class="form-content">
           <div class="form-items">
-            <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-              <div class="col-md-12">
-                <input class="form-control" formControlName="name" placeholder="İsim" required>
+            <h3>Randevu Al</h3>
+            <form>
+              <div class="form-group">
+                  <label>İsim</label>
+                  <input type="text" class="form-control" [(ngModel)]="patientName" [ngModelOptions]="{standalone: true}" placeholder="İsminizi giriniz">
               </div>
-              <div class="col-md-12">
-                <input class="form-control" formControlName="surname" placeholder="Soyisim" required>
+
+              <div class="form-group">
+                  <label>Soyisim</label>
+                  <input type="text" class="form-control"  [(ngModel)]="patientSurname" [ngModelOptions]="{standalone: true}" placeholder="Soyisminizi giriniz">
               </div>
-              <div class="col-md-12">
-                <input class="form-control" formControlName="identityNumber" placeholder="Kimlik No" required>
+              
+              <div class="form-group">
+                  <label>Tc Kimlik No</label>
+                  <input type="text" class="form-control" [(ngModel)]="patientIdentityNumber" [ngModelOptions]="{standalone: true}" placeholder="Tc kimlik numaranızı giriniz" >
               </div>
-              <div class="col-md-12">
-                <select class="form-select mt-3" formControlName="specialty" required>
-                  <option selected disabled value="">Randevu Almak İstediğiniz Alanı Seçiniz</option>
-                  <option *ngFor="let specialty of specialties" [value]="specialty.id">{{ specialty.name }}</option>
-                </select>
+              
+              <div class="form-group">
+                  <label>Randevu Almak İstediğiniz Alanı Seçiniz:</label>
+                  <select class="form-control" [(ngModel)]="specialtyId" [ngModelOptions]="{ standalone: true }" (change)="onSpecialtyChange()">
+                    <option *ngFor="let specialty of specialties" [value]="specialty.id">
+                      {{ specialty.name }}
+                  </option>
+                  </select>
               </div>
-              <div class="col-md-12">
-                <select class="form-select mt-3" formControlName="doctor" required>
-                  <option selected disabled value="">Randevu Almak İstediğiniz Doktoru Seçiniz</option>
+              <div class="form-group" *ngIf="doctors.length > 0">
+                <label>Doktor Seçiniz:</label>
+                <select class="form-control" [(ngModel)]="doctorId" [ngModelOptions]="{ standalone: true }">
                   <option *ngFor="let doctor of doctors" [value]="doctor.id">{{ doctor.name }} {{ doctor.surname }}</option>
                 </select>
               </div>
-              <div class="col-md-12">
-                <br>
-                <label for="appointment">Randevu Tarihi:</label>
-                <input type="datetime-local" formControlName="appointmentDate" required>
+
+            <div class="form-group">
+              <label>Tarih Seçiniz:</label>
+              <input type="json" class="form-control" [(ngModel)]="appointmentDate" [ngModelOptions]="{standalone: true}" >
+
+            </div>
+
+              <br/>
+      
+
+              <br/>
+              <div *ngIf="errorMessage" class="alert alert-danger">
+                {{ errorMessage }}
               </div>
-              <div class="form-button mt-3">
-                <button type="submit" class="btn btn-primary">Randevu Al</button>
-              </div>
+              <br>
+              <button type="submit" class="btn btn-primary" (click)="create()">Randevu Al</button>
             </form>
-            
+            <br>
+        
+           
           </div>
         </div>
       </div>

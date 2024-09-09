@@ -5,26 +5,43 @@
         <div class="form-content">
           <div class="form-items">
             <h3>Randevu Bul</h3>
-            <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-              <div class="col-md-12">
-                <input class="form-control" formControlName="identityNumber" placeholder="Kimlik No" required>
-                <div class="valid-feedback">Kimlik no gereklidir!</div>
-                <div class="invalid-feedback">Kimlik no boş bırakılamaz!</div>
+            <form>
+              <div class="form-group">
+                <label>Tc Kimlik Numarası</label>
+                <input type="text" class="form-control" [(ngModel)]="patientIdentityNumber" [ngModelOptions]="{standalone: true}" placeholder="Tc kimlik numaranızı giriniz">
               </div>
 
-              <div class="form-button mt-3">
-                <button id="submit" type="submit" class="btn btn-primary">Ara</button>
-              </div>
+              <br/>
+              <div *ngIf="errorMessage" class="alert alert-danger">
+                  {{ errorMessage }}
+                </div>
+              
+              <br>
+              <button type="submit" class="btn btn-primary" (click)="search()">Ara</button>
             </form>
+            
+            <p *ngIf="appointments.length === 0 && !errorMessage">
+              Randevu oluşturmak mı istiyorsunuz? <a routerLink="/randevu-al">Randevu Al</a>
+            </p>
+           
 
-            <div *ngIf="appointments.length > 0" class="mt-4">
-              <h4>Randevular:</h4>
+            <div *ngIf="appointments.length > 0">
+              <h4>Randevu Bilgileri</h4>
               <ul>
                 <li *ngFor="let appointment of appointments">
-                  {{ appointment.date }} - {{ appointment.doctor.name }} - {{ appointment.specialty.name }}
+                  <p>Alan:{{appointment.specialty.name}}</p>
+                  <p>Doktor: {{appointment.doctor.name}} {{appointment.doctor.surname}}</p>
+                  <p>Tarih: {{appointment.appointmentDate | date:'EEEE, MMMM d, y'}}</p>
+                  <p>Saat: {{appointment.appointmentDate | date:'h:mm a'}}</p>
+                  <p *ngIf="appointment.isActive">Durum: Aktif Randevu
+                  <p *ngIf="!appointment.isActive">Durum: Geçmiş Randevu
+
+                   
+                  </p>
                 </li>
               </ul>
             </div>
+
           </div>
         </div>
       </div>

@@ -1,35 +1,61 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AppointmentStatusService } from '../../services/appointment-status.service';
+import { HttpClient } from '@angular/common/http';
+
+
 @Component({
   selector: 'app-appointment-status',
   templateUrl: './appointment-status.component.html',
   styleUrl: './appointment-status.component.scss'
 })
 export class AppointmentStatusComponent implements OnInit{
-  searchForm!: FormGroup;
-  appointments: any[]=[];
+  patientIdentityNumber:string="";
+  errorMessage: string="";
+  appointments: any[] = [];
+  specialtyId: string = "";
+  specialties: any[] = [];
+  doctorId: string="";
+  doctors: any[]=[];
 
-  constructor(private fb:FormBuilder, private appointmentStatusService: AppointmentStatusService){ }
+  constructor(private http: HttpClient){ }
 
   
   ngOnInit(): void {
-    this.searchForm = this.fb.group({
-      identityNumber: ['', [Validators.required, Validators.minLength(11)]]
+    this.http.get("http://localhost:8080/api/specialties")
+    .subscribe((data: any) => {
+      this.specialties = data;
     });
   }
-  onSearch() {
-    if (this.searchForm.valid) {
-      this.appointmentStatusService.getAppointments(this.searchForm.value.identityNumber).subscribe(
-        response => {
-          this.appointments = response;
-        },
-        error => {
-          console.error('Randevu sorgulama sırasında hata oluştu:', error);
-        }
-      );
+
+  search(){
+    if (!this.patientIdentityNumber) {
+      this.errorMessage = "Kimlik numarası boş olamaz!";
+      return;
     }
+
+    console.log(this.patientIdentityNumber);
+
+    let bodyData= {
+      "patientIdentityNumber":this.patientIdentityNumber
+    };
+
+
+    
+    this.http.post<any[]>("http://localhost:8080/api/appointments/patient/" + this.patientIdentityNumber, bodyData)
+      .subscribe((data: any[]) => {
+        if (data && data.length > 0) {
+          this.appointments = data;  // Randevuları sakla
+          this.errorMessage = "";  // Hata mesajını temizle
+        } else {
+          this.appointments = [];
+          this.errorMessage = "Randevu bulunamadı.";  // Eğer randevu yoksa hata mesajı göster
+        }
+      },
+      (error) => {
+        this.errorMessage = "Randevu Bulunamadı.";
+        this.appointments = [];
+      });
+
   }
-
-
 }
