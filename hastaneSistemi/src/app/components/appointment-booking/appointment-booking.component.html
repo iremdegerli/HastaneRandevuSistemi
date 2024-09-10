@@ -38,23 +38,24 @@
 
             <div class="form-group">
               <label>Tarih Seçiniz:</label>
-              <input type="json" class="form-control" [(ngModel)]="appointmentDate" [ngModelOptions]="{standalone: true}" >
+              <input type="datetime-local" class="form-control" [(ngModel)]="appointmentDate" [ngModelOptions]="{standalone: true}" >
 
             </div>
 
               <br/>
       
-
               <br/>
               <div *ngIf="errorMessage" class="alert alert-danger">
                 {{ errorMessage }}
+              </div>
+              <div *ngIf="message" class="alert alert-primary">
+                {{message}}
+
               </div>
               <br>
               <button type="submit" class="btn btn-primary" (click)="create()">Randevu Al</button>
             </form>
             <br>
-        
-           
           </div>
         </div>
       </div>
