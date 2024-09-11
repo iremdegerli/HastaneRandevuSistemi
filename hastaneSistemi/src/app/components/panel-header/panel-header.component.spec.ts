@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderAdminComponent } from './header-admin.component';
+import { PanelHeaderComponent } from './panel-header.component';
 
-describe('HeaderAdminComponent', () => {
-  let component: HeaderAdminComponent;
-  let fixture: ComponentFixture<HeaderAdminComponent>;
+describe('PanelHeaderComponent', () => {
+  let component: PanelHeaderComponent;
+  let fixture: ComponentFixture<PanelHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HeaderAdminComponent]
+      declarations: [PanelHeaderComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(HeaderAdminComponent);
+    fixture = TestBed.createComponent(PanelHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

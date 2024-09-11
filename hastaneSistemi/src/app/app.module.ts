@@ -16,6 +16,9 @@ import { AppointmentStatusComponent } from './components/appointment-status/appo
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DoctorPanelComponent } from './components/doctor-panel/doctor-panel.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { PanelHeaderComponent } from './components/panel-header/panel-header.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { HttpClientModule } from '@angular/common/http';
     AppointmentBookingComponent,
     AppointmentStatusComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    DoctorPanelComponent,
+    AdminPanelComponent,
+    PanelHeaderComponent
   ],
   imports: [
     ReactiveFormsModule,

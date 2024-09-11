@@ -5,6 +5,8 @@ import { AppointmentBookingComponent } from './components/appointment-booking/ap
 import { AppointmentStatusComponent } from './components/appointment-status/appointment-status.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { DoctorPanelComponent } from './components/doctor-panel/doctor-panel.component';
 const routes: Routes = [
   {
     path: '', component: HomeComponent
@@ -21,8 +23,12 @@ const routes: Routes = [
   {
     path:'login', component:LoginComponent
   },
-  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
-  { path: 'doctor', loadChildren: () => import('./doctor/doctor.module').then(m => m.DoctorModule) }
+  {
+    path:'admin',component:AdminPanelComponent
+  },
+  {
+    path:'doctor',component:DoctorPanelComponent
+  }
 ];
 
 @NgModule({

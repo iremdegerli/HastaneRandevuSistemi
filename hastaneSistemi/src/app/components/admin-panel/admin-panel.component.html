@@ -1,0 +1,165 @@
+<app-panel-header></app-panel-header>
+
+<div class="admin-panel-container">
+  <h2 >Admin Paneli</h2>
+  <p>Doktorları listeleyin ve poliklinikleri görüntüleyin.</p>
+
+  <div class="button-group">
+    <button [ngClass]="{'active': showSpecialtyList}" (click)="SpecialtyOn()">Alan Listele</button>
+    <button [ngClass]="{'active': showAddSpecialty}" (click)="AddOn()">Alan Ekle</button>
+    <button [ngClass]="{'active': showDeleteSpecialty}"  (click)="DeleteOn()">Alan Sil</button>
+    <button [ngClass]="{'active': showDoctorList}"  (click)="DoctorsOn()">Doktor Bul</button>
+
+
+  </div>
+
+  <!-- Alan Listesi -->
+  <div class="specialty-list-container" *ngIf="showSpecialtyList && specialties.length > 0">
+    <h3>Alan Listesi</h3>
+    <h4>Eğer alanda çalışan doktorları görmek istiyorsanız, alanı seçebilirsiniz.</h4>
+
+    <ul>
+      <li *ngFor="let specialty of specialties">
+        <label>
+          <input type="radio" name="specialty" [value]="specialty.id" [(ngModel)]="selectedSpecialty" (change)="getDoctorsBySpecialty(specialty.id)">
+          {{specialty.name}} <br>
+        </label>
+      </li>
+    </ul>
+
+    <!-- Doktor Listesi -->
+    <div class="doctor-list-container" *ngIf="doctors.length > 0">
+      <h4>{{selectedSpecialtyName}} Alanındaki Doktorlar</h4>
+      <ul>
+        <li *ngFor="let doctor of doctors">
+          <table class="doctor-table">
+            <thead>
+              <tr>
+                <th> İsim</th>
+                <th> Kimlik No</th>
+                <th> Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td> {{doctor.name}} {{doctor.surname}}</td>
+                <td> {{doctor.identityNumber}} </td>
+                <td> {{doctor.email}} </td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div *ngIf="showAddSpecialty">
+    <h4>Alan Ekle</h4>
+
+    <form>
+      <div>
+         <label>Alan</label>
+           <input type="text" class="form-control" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" placeholder="Alan ismi">
+      </div>
+      <br/>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      <div *ngIf="message" class="alert alert-primary">
+        {{message}}
+
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary" (click)="AddSpecialty()">Ekle</button>
+    </form>
+
+  </div>
+
+  <div *ngIf="showDeleteSpecialty">
+    <h4>Alan Sil</h4>
+    <label *ngFor="let specialty of specialties">
+      <input type="radio" name="deleteSpecialty" [value]="specialty.id" [(ngModel)]="specialtyId">
+      {{specialty.name}} 
+    </label>
+    <br/>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      <div *ngIf="message" class="alert alert-primary">
+        {{message}}
+
+      </div>
+      <br>
+    <button (click)="DeleteSpecialty()">Sil</button>
+  </div>
+
+
+  <div  class="doctor-list-container" *ngIf="showDoctorList && doctord.length > 0">
+    
+    <h4> Doktor Bilgileri</h4>
+    
+    <select class="form-control" (change)="onDoctorChange($event)">
+      <option value="" disabled selected>Doktor Seçin</option>
+      <option *ngFor="let doctor of doctord" [value]="doctor.id">
+        {{ doctor.name }} {{ doctor.surname }}
+      </option>
+    </select>
+
+    <br>
+    <button [ngClass]="{'active': showDoctorInfo}"  (click)="DoctorInfoOn()">Getir</button>
+    
+    <div *ngIf="showDoctorInfo && selectedDoctor">
+      <br>
+      <h4>{{ selectedDoctor.name }} {{ selectedDoctor.surname }} Hakkında Bilgiler</h4>
+      
+      <table class="doctor-table">
+        <thead>
+          <tr>
+            <th>Kimlik No</th>
+            <th>Email</th>
+            <th>Alan</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ selectedDoctor.identityNumber }}</td>
+            <td>{{ selectedDoctor.email }}</td>
+            <td>{{ selectedDoctor.specialty.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <br>
+      
+      <div class="button-group">
+        <button [ngClass]="{'active': showAppointment}"  (click)="AppointmentOn()">Randevular</button>
+        <button [ngClass]="{'active': showHoursList}"  (click)="HoursOn()">Çalışma Saatleri</button>
+      </div>
+    
+      <div *ngIf="showAppointment && appointments.length > 0">
+        <h4>Randevu Bilgileri</h4>
+        <table class="doctor-table">
+          <thead>
+            <tr>              
+              <th>Randevu Tarihi</th>
+              <th>Hasta Adı</th>
+              <th>Randevu Bilgisi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let appointment of appointments">
+              <td>{{ appointment.appointmentDate | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ appointment.patientName }} {{ appointment.patientSurname }}</td>
+              <td *ngIf="appointment.isActive">Aktif Randevu</td>
+              <td *ngIf="!appointment.isActive">Geçmiş Randevu</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    
+    </div>
+          
+  </div>
+</div>
