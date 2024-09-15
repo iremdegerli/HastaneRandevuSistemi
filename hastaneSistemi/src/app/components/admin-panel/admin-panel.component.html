@@ -95,24 +95,16 @@
   </div>
 
 
-  <div  class="doctor-list-container" *ngIf="showDoctorList && doctord.length > 0">
-    
-    <h4> Doktor Bilgileri</h4>
-    
-    <select class="form-control" (change)="onDoctorChange($event)">
-      <option value="" disabled selected>Doktor Seçin</option>
-      <option *ngFor="let doctor of doctord" [value]="doctor.id">
-        {{ doctor.name }} {{ doctor.surname }}
-      </option>
+  <div class="doctor-list-container" *ngIf=" showDoctorList">
+    <h4>Doktor Bilgileri</h4>
+  
+    <!-- Doktorları Seçme -->  
+    <select class="form-control" (change)="onDoctorChange($event)" [(ngModel)]="doctorId" [ngModelOptions]="{ standalone: true }">
+      <option *ngFor="let doctor of doctord" [value]="doctor.id">{{ doctor.name }} {{ doctor.surname }}</option>
     </select>
-
-    <br>
-    <button [ngClass]="{'active': showDoctorInfo}"  (click)="DoctorInfoOn()">Getir</button>
-    
-    <div *ngIf="showDoctorInfo && selectedDoctor">
-      <br>
+  
+    <div *ngIf="selectedDoctor">
       <h4>{{ selectedDoctor.name }} {{ selectedDoctor.surname }} Hakkında Bilgiler</h4>
-      
       <table class="doctor-table">
         <thead>
           <tr>
@@ -129,37 +121,55 @@
           </tr>
         </tbody>
       </table>
-      
-      <br>
-      
+  
+      <!-- Randevu ve Çalışma Saati Butonları -->
       <div class="button-group">
-        <button [ngClass]="{'active': showAppointment}"  (click)="AppointmentOn()">Randevular</button>
-        <button [ngClass]="{'active': showHoursList}"  (click)="HoursOn()">Çalışma Saatleri</button>
+        <button (click)="AppointmentOn()">Randevular</button>
+        <button (click)="HoursOn()">Çalışma Saatleri</button>
       </div>
-    
+  
+      <!-- Randevular Tablosu -->
       <div *ngIf="showAppointment && appointments.length > 0">
         <h4>Randevu Bilgileri</h4>
         <table class="doctor-table">
           <thead>
-            <tr>              
+            <tr>
               <th>Randevu Tarihi</th>
               <th>Hasta Adı</th>
-              <th>Randevu Bilgisi</th>
+              <th>Randevu Durumu</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let appointment of appointments">
               <td>{{ appointment.appointmentDate | date: 'dd/MM/yyyy HH:mm' }}</td>
               <td>{{ appointment.patientName }} {{ appointment.patientSurname }}</td>
-              <td *ngIf="appointment.isActive">Aktif Randevu</td>
-              <td *ngIf="!appointment.isActive">Geçmiş Randevu</td>
+              <td>{{ appointment.isActive ? 'Aktif' : 'Geçmiş' }}</td>
             </tr>
           </tbody>
         </table>
-
       </div>
-    
+  
+      <!-- Çalışma Saatleri Tablosu -->
+      <div *ngIf="showHoursList && workingHours.length > 0">
+        <h4>Çalışma Saatleri</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Gün</th>
+              <th *ngFor="let hour of hours">{{ hour }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let day of days">
+              <td>{{ day }}</td>
+              <td *ngFor="let hour of hours" [ngClass]="getHourClass(day, hour)">
+                {{ hour }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-          
   </div>
+  
 </div>

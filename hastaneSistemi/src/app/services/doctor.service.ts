@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { WorkingHours } from '../models/working-hours.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class DoctorService {
     return this.http.get<any>(`${this.apiUrl}/doctors/specialty/${specialtyId}`);
   }
 
-  getAllDoctors():Observable<any>{
+  getDoctors():Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/doctors`);
   }
 
@@ -25,4 +26,9 @@ export class DoctorService {
   getAppointmentsByDoctor(doctorId:number):Observable<any>{
     return this.http.get<any>(`${this.apiUrl}/appointments/doctors/${doctorId}`)
   }
+
+  getDoctorWorkingHours(doctorId: number): Observable<WorkingHours[]> {
+    return this.http.get<WorkingHours[]>(`${this.apiUrl}/working-hours/doctor/${doctorId}`);
+  }
 }
+

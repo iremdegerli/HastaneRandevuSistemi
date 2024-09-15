@@ -73,3 +73,38 @@
       background-color: #f1f1f1; /* Üzerine gelindiğinde satır rengi değişimi */
     }
   }
+
+  /* admin-panel.component.css */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.working {
+  background-color: #d4edda; /* Yeşil renk */
+}
+
+.non-working {
+  background-color: #f8d7da; /* Kırmızı renk */
+}
+
+.working-hour {
+  background-color: green;
+  color: white;
+}
+
+.non-working-hour {
+  background-color: red;
+  color: white;
+}
+

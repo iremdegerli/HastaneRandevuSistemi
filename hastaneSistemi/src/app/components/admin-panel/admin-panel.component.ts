@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DoctorService } from '../../services/doctor.service';
 import { SpecialtyService } from '../../services/specialty.service';
 import { HttpClient } from '@angular/common/http';
+import { WorkingHoursService } from '../../services/working-hours.service';
+import { WorkingHours } from '../../models/working-hours.model';
 
 @Component({
   selector: 'app-admin-panel',
@@ -25,22 +27,30 @@ export class AdminPanelComponent implements OnInit {
   doctors: any[] = [];
   doctord: any[] = []; // Seçili alanın doktorları
   doctorId: string = "";
+  workingHours: WorkingHours[] = []; // Türü tanımlayın
+
+  // Günler ve saatler
+  days = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'];
+  hours = ['09:00', '09:15', '09:30', '09:45', '10:00', '10:15', '10:30', '10:45'];
+
 
   name: string = ""; // Specialty ekleme için
   selectedSpecialty: number | null = null; // Seçili alanın ID'si
   selectedSpecialtyName: string = ''; // Seçili alanın adı
-  selectedDoctor: any = null;
+  selectedDoctor: any;
   selectedDoctorId: number | null = null;
   selectedDoctorName:string='';
   
   appointments: any[]=[];
   
 
-  constructor(private http: HttpClient, private ds: DoctorService, private ss: SpecialtyService) { }
+  constructor(private http: HttpClient, private ds: DoctorService, private ss: SpecialtyService, private ws: WorkingHoursService) { }
 
   ngOnInit(): void {
     this.getSpecialties(); // Sayfa yüklendiğinde alanları getir
     this.getAllDoctors();
+    this.loadDoctors();
+
   }
 
 
@@ -94,6 +104,11 @@ export class AdminPanelComponent implements OnInit {
     this.showDeleteSpecialty = false;
     this.showSpecialtyList = false;
     this.showAppointment=false;
+
+    this.ds.getDoctorWorkingHours(this.selectedDoctor.id).subscribe((workingHours: WorkingHours[]) => {
+      this.workingHours = workingHours;
+      this.showHoursList = true;
+    });
   }
   
   getSpecialties() {
@@ -103,7 +118,7 @@ export class AdminPanelComponent implements OnInit {
   }
   getAllDoctors(){
     
-    this.ds.getAllDoctors().subscribe((value:any[])=>{
+    this.ds.getDoctors().subscribe((value:any[])=>{
       this.doctord=value;
     })
   }
@@ -126,12 +141,6 @@ export class AdminPanelComponent implements OnInit {
     });
   }
   
-  onDoctorChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const doctorId = Number(target.value);
-    this.getDoctorInfoById(doctorId);
-    this.getDoctorAppointments(doctorId); 
-  }
 
   getDoctorInfoById(doctorId: number) {
     this.selectedDoctor = this.doctord.find(doctor => doctor.id === doctorId) || null;
@@ -206,6 +215,40 @@ export class AdminPanelComponent implements OnInit {
 
     // Sağlamlık kontrolü: Seçili id'nin sayısal olduğundan emin olun
   }
+
+
+  loadDoctors(): void {
+    this.http.get('/api/doctors').subscribe((data: any) => {
+      this.doctord = data;
+    });
+  }
+
+  onDoctorChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;  // HTMLSelectElement olarak cast et
+    const doctorId = Number(target.value);  // Seçilen doktorun id'sini al
+    this.ds.getDoctorById(doctorId).subscribe((doctor) => {
+      this.selectedDoctor = doctor;
+      this.showAppointment = false;
+      this.showHoursList = false;
+    });
+  }
+  
+  loadWorkingHours(doctorId: number): void {
+    this.http.get(`/api/working-hours/doctor/${doctorId}`).subscribe((data: any) => {
+      this.workingHours = data;
+    });
+  }
+
+  // Çalışma saatlerine uygun CSS sınıfı ekleme (aktif olup olmadığını kontrol etmek için)
+  getHourClass(day: string, hour: string) {
+    const isOccupied = this.workingHours.some(
+      (wh) => wh.day === day && wh.hour === hour && wh.isOccupied
+    );
+    return isOccupied ? 'occupied' : 'available';
+  }
+  
+
+
 
   clearMessages() {
     setTimeout(() => {
