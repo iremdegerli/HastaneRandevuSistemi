@@ -223,8 +223,11 @@ export class AdminPanelComponent implements OnInit {
   }
 
   loadDoctors(): void {
-    this.http.get('/api/doctors').subscribe((data: any) => {
+    this.http.get('/api/doctors',{ responseType: 'text' }).subscribe((data: any) => {
       this.doctord = data;
+    },
+    (error) => {
+      console.error('HTTP Error', error);
     });
   }
 

@@ -1,0 +1,110 @@
+.doctor-panel-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+button.active {
+  background-color: #0056b3;
+  border-color: #007bff;
+}
+.specialty-list-container,
+.doctor-list-container {
+  margin-top: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px 0;
+}
+
+input[type="radio"] {
+  margin-right: 10px;
+}
+
+.doctor-table {
+  width: 100%;
+  border-collapse: collapse; /* Çizgilerin kesintisiz olması için */
+
+  th, td {
+    border: 1px solid #ddd; /* Hücreler arası çizgi */
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2; /* Başlık satırı için arka plan rengi */
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternatif satırlar için arka plan rengi */
+  }
+
+  tr:hover {
+    background-color: #f1f1f1; /* Üzerine gelindiğinde satır rengi değişimi */
+  }
+}
+
+/* admin-panel.component.css */
+table {
+width: 100%;
+border-collapse: collapse;
+}
+
+th, td {
+border: 1px solid #ddd;
+padding: 8px;
+text-align: center;
+}
+
+th {
+background-color: #f4f4f4;
+}
+
+.working {
+background-color: #d4edda; /* Yeşil renk */
+}
+
+.non-working {
+background-color: #f8d7da; /* Kırmızı renk */
+}
+
+.working-hour {
+background-color: green;
+color: white;
+}
+
+.non-working-hour {
+background-color: red;
+color: white;
+}
+

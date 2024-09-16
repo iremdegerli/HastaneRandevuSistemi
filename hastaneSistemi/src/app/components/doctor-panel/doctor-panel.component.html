@@ -1,8 +1,98 @@
 <app-panel-header></app-panel-header>
 
+<div class="doctor-panel-container">
+  <h2 >Doktor Paneli</h2>
+  <p>Randevularınızı ve çalışma saatlerinizi görüntüleyin.</p>
 
-<div>
-  <h2>Doktor Paneli</h2>
-  <p>Çalışma saatlerinizi belirleyin ve randevularınızı görüntüleyin.</p>
-  <!-- Doktorun takvim ve randevu bilgileri buraya gelecek -->
+  <div class="button-group">
+    <button [ngClass]="{'active': showAppointmentList}" (click)="AppointmentOn()">Randevu Listele</button>
+    <button [ngClass]="{'active': showHoursList}" (click)="HoursOn()">Çalışma Saati Görüntüle</button>
+  </div>
+
+  <div *ngIf="showAppointmentList ">
+    <h4>Randevular</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Hasta Adı Soyadı</th>
+          <th>Geçmiş mi?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments">
+          <td>{{ appointment.appointmentDate| date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ appointment.patientName }} {{ appointment.patientSurname }}</td>
+          <td>{{ appointment.isPast ? 'Aktif Randevu' : 'Geçmiş Randevu' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+      <!-- Çalışma Saatleri Tablosu -->
+  <div *ngIf="showHoursList ">
+    <h4>Çalışma Saatleri</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Başlangıç Saati</th>
+          <th>Bitiş Saati</th>
+          <th>Ara</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let workingHour of workingHours">
+          <td>{{ workingHour.date | date:'dd/MM/yyyy' }}</td>
+          <td>{{ workingHour.startTime }}</td>
+          <td>{{ workingHour.endTime }}</td>
+          <td>
+            <div *ngFor="let additionalHour of workingHour.additionalHours">
+              {{ additionalHour.startTime }} - {{ additionalHour.endTime }}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+
+    <div class="button-group">
+      <button [ngClass]="{'active': showAddHours}" (click)="AddHoursOn()">Ekle</button>
+      <button [ngClass]="{'active': showUpdateHours}" (click)="UpdateHoursOn()">Güncelle</button>
+      <button [ngClass]="{'active': showDeleteHours}" (click)="DeleteHoursOn()">Sil</button>
+    </div>
+   
+    <div *ngIf="showAddHours ">
+      <h4>Saat Ekle</h4>
+
+      <form (ngSubmit)="onAddHours()">
+        <label for="date">Tarih:</label>
+        <input id="date" type="date" [(ngModel)]="newWorkingHour.date" name="date" required>
+
+        <label for="startTime">Başlangıç Saati:</label>
+        <input id="startTime" type="time" [(ngModel)]="newWorkingHour.startTime" name="startTime" required>
+
+        <label for="endTime">Bitiş Saati:</label>
+        <input id="endTime" type="time" [(ngModel)]="newWorkingHour.endTime" name="endTime" required>
+
+        <label for="additionalHours">Ek Saatler:</label>
+        <div *ngFor="let additionalHour of newWorkingHour.additionalHours; let i = index">
+          <input type="time" [(ngModel)]="additionalHour.startTime" name="additionalStartTime{{i}}" placeholder="Başlangıç Saati">
+          <input type="time" [(ngModel)]="additionalHour.endTime" name="additionalEndTime{{i}}" placeholder="Bitiş Saati">
+          <button type="button" (click)="removeAdditionalHour(i)">Kaldır</button>
+        </div>
+        <button type="button" (click)="addAdditionalHour()">Ek Saat Ekle</button>
+
+        <button type="submit">Kaydet</button>
+      </form>
+    </div>
+
+      <div *ngIf="showUpdateHours ">
+        <h4>Saat Güncelle</h4>
+      </div>
+
+      <div *ngIf="showDeleteHours ">
+        <h4>Saat Sil</h4>
+      </div>
+  
 </div>

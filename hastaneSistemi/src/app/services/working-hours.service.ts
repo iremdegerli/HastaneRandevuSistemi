@@ -8,11 +8,14 @@ import { WorkingHours } from '../models/working-hours.model';
   providedIn: 'root'
 })
 export class WorkingHoursService {
-  private baseUrl = 'http://localhost:8080/api/working-hours'; // Base URL
+  private apiUrl = 'http://localhost:8080/api/working-hours'; // Base URL
 
   constructor(private http: HttpClient) {}
 
   getWorkingHoursByDoctor(doctorId: number): Observable<WorkingHours[]> {
-    return this.http.get<WorkingHours[]>(`${this.baseUrl}/doctor/${doctorId}`);
+    return this.http.get<WorkingHours[]>(`${this.apiUrl}/doctor/${doctorId}`);
+  }
+  addWorkingHours(workingHours: WorkingHours): Observable<WorkingHours> {
+    return this.http.post<WorkingHours>(this.apiUrl, workingHours);
   }
 }
