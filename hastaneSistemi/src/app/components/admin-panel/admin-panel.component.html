@@ -102,7 +102,7 @@
     <select class="form-control" (change)="onDoctorChange($event)" [(ngModel)]="doctorId" [ngModelOptions]="{ standalone: true }">
       <option *ngFor="let doctor of doctord" [value]="doctor.id">{{ doctor.name }} {{ doctor.surname }}</option>
     </select>
-  
+    <br>
     <div *ngIf="selectedDoctor">
       <h4>{{ selectedDoctor.name }} {{ selectedDoctor.surname }} Hakkında Bilgiler</h4>
       <table class="doctor-table">
@@ -121,14 +121,14 @@
           </tr>
         </tbody>
       </table>
-  
+      <br>
       <!-- Randevu ve Çalışma Saati Butonları -->
       <div class="button-group">
-        <button (click)="AppointmentOn()">Randevular</button>
-        <button (click)="HoursOn()">Çalışma Saatleri</button>
+        <button [ngClass]="{'active': showAppointment}"  (click)="AppointmentOn()">Randevular</button>
+        <button [ngClass]="{'active': showHoursList}" (click)="HoursOn()">Çalışma Saatleri</button>
       </div>
   
-      <!-- Randevular Tablosu -->
+     
       <div *ngIf="showAppointment && appointments.length > 0">
         <h4>Randevu Bilgileri</h4>
         <table class="doctor-table">
@@ -148,26 +148,11 @@
           </tbody>
         </table>
       </div>
-  
+
       <!-- Çalışma Saatleri Tablosu -->
-      <div *ngIf="showHoursList && workingHours.length > 0">
+      <div *ngIf="showHoursList ">
         <h4>Çalışma Saatleri</h4>
-        <table>
-          <thead>
-            <tr>
-              <th>Gün</th>
-              <th *ngFor="let hour of hours">{{ hour }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let day of days">
-              <td>{{ day }}</td>
-              <td *ngFor="let hour of hours" [ngClass]="getHourClass(day, hour)">
-                {{ hour }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        
       </div>
     </div>
   </div>

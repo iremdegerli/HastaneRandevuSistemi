@@ -20,7 +20,7 @@ export class DoctorService {
   }
 
   getDoctorById(doctorId:number):Observable<any>{
-    return this.http.get<any>(`${this.apiUrl}/admin/doctors/${doctorId}`)
+    return this.http.get<any>(`${this.apiUrl}/users/${doctorId}`)
   }
 
   getAppointmentsByDoctor(doctorId:number):Observable<any>{

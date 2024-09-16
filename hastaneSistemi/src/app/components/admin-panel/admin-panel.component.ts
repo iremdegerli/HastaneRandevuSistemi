@@ -133,6 +133,8 @@ export class AdminPanelComponent implements OnInit {
   }
 
   getDoctorAppointments(doctorId: number) {
+    this.selectedDoctor = this.doctord.find(doctor => doctor.id === doctorId) || null;
+  
     this.ds.getAppointmentsByDoctor(doctorId).subscribe((appointments: any[]) => {
       this.appointments = appointments;
     }, (error) => {
@@ -226,6 +228,8 @@ export class AdminPanelComponent implements OnInit {
   onDoctorChange(event: Event): void {
     const target = event.target as HTMLSelectElement;  // HTMLSelectElement olarak cast et
     const doctorId = Number(target.value);  // Seçilen doktorun id'sini al
+  
+    this.getDoctorAppointments(doctorId); 
     this.ds.getDoctorById(doctorId).subscribe((doctor) => {
       this.selectedDoctor = doctor;
       this.showAppointment = false;
