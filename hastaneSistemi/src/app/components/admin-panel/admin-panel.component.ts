@@ -76,6 +76,8 @@ export class AdminPanelComponent implements OnInit {
     this.showDeleteSpecialty = false;
     this.showSpecialtyList = false;
     this.showDoctorInfo=false;
+    this.showAppointment=false;
+    this.showHoursList=false;
   }
 
   DoctorInfoOn(){
@@ -83,6 +85,8 @@ export class AdminPanelComponent implements OnInit {
     this.showAddSpecialty = false;
     this.showDeleteSpecialty = false;
     this.showSpecialtyList = false;
+    this.showAppointment=false;
+    this.showHoursList=false;
   }
 
   AppointmentOn(){
@@ -177,26 +181,35 @@ export class AdminPanelComponent implements OnInit {
     // Sağlamlık kontrolü: Seçili id'nin sayısal olduğundan emin olun
     const id = Number(this.specialtyId);
 
-    this.ds.getDoctorsBySpecialty(id).subscribe((doctors: any[]) => {
-      if (doctors.length > 0) {
-        this.errorMessage = "Bu alanda kayıtlı doktorlar olduğu için silme işlemi yapılamaz!";
-        this.clearMessages();
-        return;
-      }
-
-      this.ss.deleteSpecialty(id).subscribe(
-        (data:any) => {
-          this.message = "Alan başarıyla silindi.";
-          this.getSpecialties(); // Alan listesini güncelle
+    this.ds.getDoctorsBySpecialty(id).subscribe(
+      (doctors: any[]) => {
+        console.log("Doktorlar: ", doctors); // Doktorları konsola yazdır
+        if (doctors.length > 0) {
+          this.errorMessage = "Bu alanda kayıtlı doktorlar olduğu için silme işlemi yapılamaz!";
           this.clearMessages();
-        },
-        (error) => {
-          this.errorMessage = "Alan silinemedi.";
-          this.getSpecialties(); 
-          this.clearMessages();
+          return;
         }
-      );
-    });
+    
+        this.ss.deleteSpecialty(id).subscribe(
+          (data: any) => {
+            this.message = "Alan başarıyla silindi."; // Backend'den gelen mesajı göster
+            this.getSpecialties();
+            this.clearMessages();
+          },
+          (error) => {
+            this.errorMessage = "Alan silinemedi.";
+            this.getSpecialties();
+            this.clearMessages();
+          }
+        );
+      },
+      (error) => {
+        console.error("Doktor bilgisi alınırken hata: ", error); // Hata durumunu konsola yaz
+        this.errorMessage = "Doktor bilgisi alınamadı.";
+        this.clearMessages();
+      }
+    );
+    
   }
 
   GetDoctor(){
