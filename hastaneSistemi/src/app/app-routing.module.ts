@@ -7,6 +7,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { DoctorPanelComponent } from './components/doctor-panel/doctor-panel.component';
+import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [
   {
     path: '', component: HomeComponent
@@ -23,12 +24,8 @@ const routes: Routes = [
   {
     path:'login', component:LoginComponent
   },
-  {
-    path:'admin',component:AdminPanelComponent
-  },
-  {
-    path:'doctor',component:DoctorPanelComponent
-  }
+  { path: 'admin', component: AdminPanelComponent, canActivate: [AuthGuard] ,data: {role: 'admin'}},
+  { path: 'doctor', component: DoctorPanelComponent, canActivate:[AuthGuard],data: {role: 'doctor'}},
 ];
 
 @NgModule({

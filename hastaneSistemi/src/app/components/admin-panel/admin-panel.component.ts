@@ -222,7 +222,6 @@ export class AdminPanelComponent implements OnInit {
     // Sağlamlık kontrolü: Seçili id'nin sayısal olduğundan emin olun
   }
 
-
   loadDoctors(): void {
     this.http.get('/api/doctors').subscribe((data: any) => {
       this.doctord = data;
@@ -246,7 +245,6 @@ export class AdminPanelComponent implements OnInit {
     this.ws.getWorkingHoursByDoctor(doctorId).subscribe(
       (response: any[]) => {
       this.workingHours = response;
-      this.showHoursList = true; // Çalışma saatlerini listelemek için değişkeni açıyoruz
       },
       (error) => {
       console.error("Çalışma saatleri getirilemedi:", error);

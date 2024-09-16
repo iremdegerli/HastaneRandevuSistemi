@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'; // Router servisini import edin
+
 
 @Component({
   selector: 'app-register',
@@ -18,7 +20,7 @@ export class RegisterComponent implements OnInit{
   specialties: any[] = [];
   errorMessage: string="";
 
-  constructor(private http: HttpClient){ }
+  constructor(private http: HttpClient, private router: Router){ }
 
 
     ngOnInit(): void {
@@ -49,6 +51,7 @@ export class RegisterComponent implements OnInit{
       {console.log(data);
         console.log(data);
         alert("Kullanıcı kaydı başarılı!");
+        this.router.navigate(['/login']);
       },
       (error) => {
         console.error('Hata oluştu:', error);

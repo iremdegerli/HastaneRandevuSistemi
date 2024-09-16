@@ -5,9 +5,8 @@
        <nav class="nav">
         <ul>
           <li style="float: right;">
-            Hoşgeldiniz, username 
-            <button>Çıkış Yap</button>
-           <!-- <button (click)="logout()">Çıkış Yap</button> -->
+            Hoşgeldiniz, {{currentUser.name}} {{currentUser?.surname}}
+            <button (click)="logout()">Çıkış Yap</button> 
           </li>
         </ul>
       </nav>
