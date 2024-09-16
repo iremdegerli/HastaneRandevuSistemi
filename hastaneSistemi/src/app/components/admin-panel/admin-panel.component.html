@@ -150,9 +150,30 @@
       </div>
 
       <!-- Çalışma Saatleri Tablosu -->
-      <div *ngIf="showHoursList ">
+      <div *ngIf="showHoursList && workingHours.length > 0">
         <h4>Çalışma Saatleri</h4>
-        
+        <table class="working-hours-table">
+          <thead>
+            <tr>
+              <th>Tarih</th>
+              <th>Başlangıç Saati</th>
+              <th>Bitiş Saati</th>
+              <th>Mola Saatleri</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hour of workingHours">
+              <td>{{ hour.date| date: 'dd/MM/yyyy' }}</td>
+              <td>{{ hour.startTime }}</td>
+              <td>{{ hour.endTime }}</td>
+              <td>
+                <span *ngFor="let additional of hour.additionalHours">
+                  {{ additional.startTime }} - {{ additional.endTime }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
