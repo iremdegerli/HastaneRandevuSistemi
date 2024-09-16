@@ -82,17 +82,59 @@
           <button type="button" (click)="removeAdditionalHour(i)">Kaldır</button>
         </div>
         <button type="button" (click)="addAdditionalHour()">Ek Saat Ekle</button>
-
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="message" class="alert alert-primary">
+          {{message}}
+        </div>
         <button type="submit">Kaydet</button>
       </form>
     </div>
 
-      <div *ngIf="showUpdateHours ">
-        <h4>Saat Güncelle</h4>
+    <div *ngIf="showUpdateHours">
+      <h4>Çalışma Saatlerini Güncelle</h4>
+      <label for="updateHoursSelect">Güncellemek İstediğiniz Çalışma Saatini Seçin:</label>
+      <select id="updateHoursSelect" [(ngModel)]="selectedUpdateHourId">
+        <option *ngFor="let workingHour of workingHours" [value]="workingHour.id">
+          {{ workingHour.date }} - {{ workingHour.startTime }} - {{ workingHour.endTime }}
+        </option>
+      </select>
+    
+      <div *ngIf="selectedUpdateHourId">
+        <label for="updateStartTime">Yeni Başlangıç Saati:</label>
+        <input type="time" id="updateStartTime" [(ngModel)]="updatedStartTime">
+    
+        <label for="updateEndTime">Yeni Bitiş Saati:</label>
+        <input type="time" id="updateEndTime" [(ngModel)]="updatedEndTime">
+        <div *ngIf="errorMessage" class="alert alert-danger"></div>
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="message" class="alert alert-primary">
+          {{message}}
+        </div>
+        <button (click)="updateWorkingHours()">Güncelle</button>
       </div>
+    </div>
+    
 
-      <div *ngIf="showDeleteHours ">
+      <div *ngIf="showDeleteHours">
         <h4>Saat Sil</h4>
+
+      <label for="hoursSelect">Silmek İstediğiniz Çalışma Saatini Seçin:</label>
+      <select id="hoursSelect" [(ngModel)]="selectedHourId">
+        <option *ngFor="let workingHour of workingHoursList" [value]="workingHour.id">
+          {{ workingHour.date }}
+        </option>
+      </select>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      <div *ngIf="message" class="alert alert-primary">
+        {{message}}
+      </div>
+      <button (click)="deleteWorkingHours()">Kaldır</button>
+    
       </div>
   
 </div>

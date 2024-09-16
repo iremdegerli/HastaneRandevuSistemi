@@ -4,10 +4,11 @@ export interface AdditionalHour {
 }
 
 export interface WorkingHours {
+  id: number;
   doctor: { id: number };
   date: string;
   startTime: string;
   endTime: string;
   isOccupied: boolean;
-  additionalHours: AdditionalHour[];
+  additionalHours: { startTime: string; endTime: string }[];
 }
