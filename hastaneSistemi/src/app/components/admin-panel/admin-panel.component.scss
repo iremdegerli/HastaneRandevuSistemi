@@ -90,14 +90,19 @@ table {
   background-color: #f4f4f4;
   }
   
+  .appointment-hour {
+    background-color: #cce5ff; /* Mavi renk */
+    color: black;
+  }
+  
   .working-hour {
-    background-color: #7bdc91;
-    color: #7bdc91;
+    background-color: #d4edda; /* Yeşil renk */
+    color: black;
   }
   
   .non-working-hour {
-    background-color: #ff4958;
-    color: #ff4958;
+    background-color: #f8d7da; /* Kırmızı renk */
+    color: black;
   }
 
 .admin-panel-header {

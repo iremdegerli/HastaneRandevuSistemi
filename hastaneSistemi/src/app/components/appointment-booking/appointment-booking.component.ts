@@ -45,6 +45,7 @@ export class AppointmentBookingComponent implements OnInit {
   create() {
     if (!this.patientName || !this.patientSurname || !this.patientIdentityNumber || !this.doctorId || !this.specialtyId || !this.appointmentDate) {
       this.errorMessage = "Lütfen tüm alanları doldurduğunuzdan emin olun!";
+      this.clearMessages();
       return;
     }
 
@@ -53,6 +54,7 @@ export class AppointmentBookingComponent implements OnInit {
 
     if (isNaN(date.getTime())) {
       this.errorMessage = "Geçersiz tarih formatı!";
+      this.clearMessages();
       return;
     }
 
@@ -69,16 +71,24 @@ export class AppointmentBookingComponent implements OnInit {
     };
 
     this.http.post("http://localhost:8080/api/appointments", bodyData, { responseType: 'text' })
-      .subscribe(
-        (data: any) => {
-          console.log(data);
-          this.message="Randevu başarıyla oluşturuldu.";
-        },
-        (error) => {
-          console.log(bodyData);
-          console.error('Hata oluştu:', error);
-          this.errorMessage = "Randevu alma sırasında bir hata oluştu, lütfen tekrar deneyin.";
-        }
-      );
+    .subscribe(
+      (data: any) => {
+        console.log(data);
+        this.message="Randevu başarıyla oluşturuldu.";
+        this.clearMessages();
+      },
+      (error) => {
+        console.log(bodyData);
+        console.error('Hata oluştu:', error);
+        this.errorMessage = "Randevu alma sırasında bir hata oluştu, lütfen tekrar deneyin.";
+        this.clearMessages();
+      });
+      
+  }
+  clearMessages() {
+    setTimeout(() => {
+      this.errorMessage = "";
+      this.message="";
+    }, 5000); 
   }
 }

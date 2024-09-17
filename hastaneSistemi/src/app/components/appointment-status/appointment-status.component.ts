@@ -31,6 +31,7 @@ export class AppointmentStatusComponent implements OnInit{
   search(){
     if (!this.patientIdentityNumber) {
       this.errorMessage = "Kimlik numarası boş olamaz!";
+      this.clearMessages();
       return;
     }
 
@@ -48,12 +49,19 @@ export class AppointmentStatusComponent implements OnInit{
         } else {
           this.appointments = [];
           this.errorMessage = "Randevu bulunamadı.";  // Eğer randevu yoksa hata mesajı göster
+          this.clearMessages();
         }
       },
       (error) => {
         this.errorMessage = "Randevu Bulunamadı.";
+        this.clearMessages();
         this.appointments = [];
       });
 
+  }
+  clearMessages() {
+    setTimeout(() => {
+      this.errorMessage = "";
+    }, 5000); 
   }
 }

@@ -28,7 +28,7 @@
         <tr *ngFor="let appointment of appointments">
           <td>{{ appointment.appointmentDate| date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ appointment.patientName }} {{ appointment.patientSurname }}</td>
-          <td>{{ appointment.isPast ? 'Aktif Randevu' : 'Geçmiş Randevu' }}</td>
+          <td>{{ appointment.isActive ? 'Aktif Randevu' : 'Geçmiş Randevu' }}</td>
         </tr>
       </tbody>
     </table>
