@@ -40,8 +40,6 @@ export class AppointmentStatusComponent implements OnInit{
       "patientIdentityNumber":this.patientIdentityNumber
     };
 
-
-    
     this.http.post<any[]>("http://localhost:8080/api/appointments/patient/" + this.patientIdentityNumber, bodyData)
       .subscribe((data: any[]) => {
         if (data && data.length > 0) {

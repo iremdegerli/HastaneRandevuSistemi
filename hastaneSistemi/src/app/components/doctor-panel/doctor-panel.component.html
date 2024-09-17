@@ -94,29 +94,46 @@
 
     <div *ngIf="showUpdateHours">
       <h4>Çalışma Saatlerini Güncelle</h4>
+      
       <label for="updateHoursSelect">Güncellemek İstediğiniz Çalışma Saatini Seçin:</label>
-      <select id="updateHoursSelect" [(ngModel)]="selectedUpdateHourId">
+      <select id="updateHoursSelect" [(ngModel)]="selectedUpdateHourId" (change)="onHourSelectionChange($event)">
         <option *ngFor="let workingHour of workingHours" [value]="workingHour.id">
           {{ workingHour.date }} - {{ workingHour.startTime }} - {{ workingHour.endTime }}
         </option>
       </select>
     
       <div *ngIf="selectedUpdateHourId">
+        <label for="updateDate">Yeni Tarih:</label>
+        <input type="date" id="updateDate" [(ngModel)]="newWorkingHour.date">
+    
         <label for="updateStartTime">Yeni Başlangıç Saati:</label>
-        <input type="time" id="updateStartTime" [(ngModel)]="updatedStartTime">
+        <input type="time" id="updateStartTime" [(ngModel)]="newWorkingHour.startTime">
     
         <label for="updateEndTime">Yeni Bitiş Saati:</label>
-        <input type="time" id="updateEndTime" [(ngModel)]="updatedEndTime">
-        <div *ngIf="errorMessage" class="alert alert-danger"></div>
+        <input type="time" id="updateEndTime" [(ngModel)]="newWorkingHour.endTime">
+        
+        <h5>Ek Saatler:</h5>
+        <div *ngFor="let hour of newWorkingHour.additionalHours; let i = index">
+          <label>Ek Başlangıç Saati:</label>
+          <input type="time" [(ngModel)]="newWorkingHour.additionalHours[i].startTime">
+    
+          <label>Ek Bitiş Saati:</label>
+          <input type="time" [(ngModel)]="newWorkingHour.additionalHours[i].endTime">
+          
+          <button (click)="removeAdditionalHour(i)">Sil</button>
+        </div>
+        <button (click)="addAdditionalHour()">Ek Saat Ekle</button>
+    
+        <button (click)="updateWorkingHours()">Güncelle</button>
+    
+        <div *ngIf="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
         </div>
         <div *ngIf="message" class="alert alert-primary">
           {{message}}
         </div>
-        <button (click)="updateWorkingHours()">Güncelle</button>
       </div>
-    </div>
-    
+    </div> 
 
       <div *ngIf="showDeleteHours">
         <h4>Saat Sil</h4>

@@ -4,6 +4,7 @@ import { SpecialtyService } from '../../services/specialty.service';
 import { HttpClient } from '@angular/common/http';
 import { WorkingHoursService } from '../../services/working-hours.service';
 import { WorkingHours } from '../../models/working-hours.model';
+import { error } from 'node:console';
 
 @Component({
   selector: 'app-admin-panel',
@@ -42,12 +43,10 @@ export class AdminPanelComponent implements OnInit {
   constructor(private http: HttpClient, private ds: DoctorService, private ss: SpecialtyService, private ws: WorkingHoursService) { }
 
   ngOnInit(): void {
-    this.getSpecialties(); // Sayfa yüklendiğinde alanları getir
-    this.getAllDoctors();
+    this.getSpecialties();
     this.loadDoctors();
 
   }
-
 
   SpecialtyOn() {
     this.showSpecialtyList = !this.showSpecialtyList;
@@ -78,6 +77,9 @@ export class AdminPanelComponent implements OnInit {
     this.showDoctorInfo=false;
     this.showAppointment=false;
     this.showHoursList=false;
+
+    this.getAllDoctors();
+
   }
 
   DoctorInfoOn(){
@@ -111,11 +113,16 @@ export class AdminPanelComponent implements OnInit {
       this.specialties = data;
     });
   }
+
   getAllDoctors(){
-    
     this.ds.getDoctors().subscribe((value:any[])=>{
+      console.log(value);
       this.doctord=value;
-    })
+    },
+    error=>{
+      console.error('error fetchin',error);
+    }
+  );
   }
 
   getDoctorsBySpecialty(specialtyId: number) {

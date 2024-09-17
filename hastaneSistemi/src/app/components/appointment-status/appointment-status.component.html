@@ -29,9 +29,10 @@
            
 
             <div *ngIf="appointments.length > 0">
-              <h4>Randevu Bilgileri</h4>
               <ul>
+                <br>
                 <li *ngFor="let appointment of appointments">
+                  <h2> {{appointment.patientName}} {{appointment.patientSurname}} Randevu Bilgileri</h2>
                   <p>Alan:{{appointment.specialty.name}}</p>
                   <p>Doktor: {{appointment.doctor.name}} {{appointment.doctor.surname}}</p>
                   <p>Tarih: {{appointment.appointmentDate | date:'EEEE, MMMM d, y'}}</p>

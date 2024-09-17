@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { WorkingHoursService } from '../../services/working-hours.service';
 import { WorkingHours } from '../../models/working-hours.model';
 import { AuthService } from '../../services/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'doctor-admin-panel',
@@ -29,6 +30,9 @@ export class DoctorPanelComponent implements OnInit {
   errorMessage: string = "";
   message: string = "";
 
+  updateForm: FormGroup;
+
+
   newWorkingHour: WorkingHours = {
     id: 0,
     doctor: { id: 0 },
@@ -40,7 +44,14 @@ export class DoctorPanelComponent implements OnInit {
   };
 
 
-  constructor(private http: HttpClient, private as:AuthService, private ds: DoctorService, private ws:WorkingHoursService) { }
+  constructor(private http: HttpClient, private as:AuthService, private ds: DoctorService, private ws:WorkingHoursService, private fb:FormBuilder) {
+    this.updateForm = this.fb.group({
+      date: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required]
+    });
+  }
+   
 
   ngOnInit(): void {
     this.loadAppointments();
@@ -147,7 +158,7 @@ export class DoctorPanelComponent implements OnInit {
     if (this.selectedHourId !== null) {
       this.ws.deleteWorkingHours(this.selectedHourId).subscribe(
         () => {
-          this.message="Çalışma saati başarıyla silindi."
+          this.message="Çalışma saati başarıyla silindi.";
           this.loadWorkingHours();
           this.clearMessages();
 
@@ -161,50 +172,46 @@ export class DoctorPanelComponent implements OnInit {
   }
 
   updateWorkingHours() {
-    // Gerekli alanları kontrol edin
-    if (!this.selectedUpdateHourId || !this.updatedStartTime || !this.updatedEndTime) {
-      this.errorMessage = 'Lütfen tüm alanları doldurun.';
+    const currentUser = this.as.currentUserValue;
+    if (currentUser && currentUser.id && this.selectedUpdateHourId) {
+      this.newWorkingHour.doctor.id = currentUser.id;
+      this.ws.updateWorkingHours(this.selectedUpdateHourId, this.newWorkingHour).subscribe(
+        (response) => {
+          this.message = "Çalışma saati başarıyla güncellendi.";
+          this.clearMessages();
+          this.loadWorkingHours();
+        },
+        (error) => {
+          this.errorMessage = "Çalışma saati güncellenirken bir hata oluştu.";
+          this.clearMessages();
+          console.error('Error updating working hours:', error);
+        }
+      );
+    } else {
+      this.errorMessage = "Güncelleme için gerekli bilgiler eksik.";
       this.clearMessages();
-
-      return;
     }
-  
-    // Seçilen saatlerin bilgilerini almak için API'den getirilmesi gerekebilir
-    const selectedHour = this.workingHours.find(hour => hour.id === this.selectedUpdateHourId);
-  
-    // Eğer seçili saat bulunamazsa hata mesajı göster
-    if (!selectedHour) {
-      this.errorMessage = 'Seçilen çalışma saati bulunamadı.';
-      this.clearMessages();
-
-      return;
-    }
-  
-    // Güncelleme için payload oluşturun
-    const updatePayload = {
-      id: this.selectedUpdateHourId, // Güncellenen saatin ID'si
-      doctor: { id: this.as.currentUserValue.id }, // Güncelleyen doktorun ID'si
-      date: selectedHour.date, // Güncellenmeyecek tarih
-      startTime: this.updatedStartTime, // Yeni başlangıç saati
-      endTime: this.updatedEndTime, // Yeni bitiş saati
-      isOccupied: selectedHour.isOccupied, // Mevcut isOccupied değeri
-      additionalHours: [] // Ek saatler temizlenecek
-    };
-  
-    // Güncelleme isteğini gönder
-    this.ws.updateWorkingHours(this.selectedUpdateHourId, updatePayload).subscribe(
-      () => {
-        this.message = 'Çalışma saati başarıyla güncellendi.';
-        this.clearMessages();
-        this.loadWorkingHours(); // Güncel çalışma saatlerini yeniden yükleyin
-      },
-      (error) => {
-        console.error('Error updating working hours:', error);
-        this.errorMessage = 'Çalışma saati güncellenirken bir hata oluştu.';
-        this.clearMessages();
-      }
-    );
   }
+  onHourSelectionChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const selectedHourId = Number(target.value);
+  
+    // Seçilen saat ID'sini güncelle
+    this.selectedHourId = selectedHourId;
+  
+    // Seçilen saat bilgisini bulma işlemi
+    const selectedHour = this.workingHours.find(hour => hour.id === selectedHourId);
+  
+    if (selectedHour) {
+      // Güncelleme formunu doldur
+      this.newWorkingHour.date = selectedHour.date;
+      this.newWorkingHour.startTime = selectedHour.startTime;
+      this.newWorkingHour.endTime = selectedHour.endTime;
+    } else {
+      console.error('Seçilen çalışma saati bulunamadı.');
+    }
+  }
+  
   
   onAddHours() {
     const currentUser = this.as.currentUserValue;
@@ -218,11 +225,13 @@ export class DoctorPanelComponent implements OnInit {
         },
         (error) => {
           this.errorMessage = "Çalışma saati eklenirken bir hata oluştu.";
+          this.clearMessages();
           console.error('Error adding working hours:', error);
         }
       );
     } else {
       this.errorMessage = "Kullanıcı bilgileri mevcut değil.";
+      this.clearMessages();
     }
   }
 

@@ -23,9 +23,9 @@ export class WorkingHoursService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  updateWorkingHours(id: number, payload: any): Observable<any> {
-    const url = `${this.apiUrl}/${id}`; // ID'yi URL'de kullanarak güncelleme
-    return this.http.put(url, payload); // PUT isteği gönder
+  updateWorkingHours(id: number, workingHour: WorkingHours) {
+    return this.http.put(`${this.apiUrl}/${id}`, workingHour);
   }
+  
   
 }
