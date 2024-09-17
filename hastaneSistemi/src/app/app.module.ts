@@ -19,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DoctorPanelComponent } from './components/doctor-panel/doctor-panel.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { PanelHeaderComponent } from './components/panel-header/panel-header.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { PanelHeaderComponent } from './components/panel-header/panel-header.com
     LoginComponent,
     DoctorPanelComponent,
     AdminPanelComponent,
-    PanelHeaderComponent
+    PanelHeaderComponent,
+    CalendarComponent
   ],
   imports: [
     ReactiveFormsModule,

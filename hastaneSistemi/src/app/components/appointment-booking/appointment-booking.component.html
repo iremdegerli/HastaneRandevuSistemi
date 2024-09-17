@@ -1,6 +1,5 @@
 <app-header></app-header>
 
-
 <main>
   <div class="form-body">
     <div class="row">
@@ -10,51 +9,57 @@
             <h3>Randevu Al</h3>
             <form>
               <div class="form-group">
-                  <label>İsim</label>
-                  <input type="text" class="form-control" [(ngModel)]="patientName" [ngModelOptions]="{standalone: true}" placeholder="İsminizi giriniz">
+                <label>İsim</label>
+                <input type="text" class="form-control" [(ngModel)]="patientName" [ngModelOptions]="{standalone: true}" placeholder="İsminizi giriniz">
               </div>
 
               <div class="form-group">
-                  <label>Soyisim</label>
-                  <input type="text" class="form-control"  [(ngModel)]="patientSurname" [ngModelOptions]="{standalone: true}" placeholder="Soyisminizi giriniz">
+                <label>Soyisim</label>
+                <input type="text" class="form-control" [(ngModel)]="patientSurname" [ngModelOptions]="{standalone: true}" placeholder="Soyisminizi giriniz">
               </div>
               
               <div class="form-group">
-                  <label>Tc Kimlik No</label>
-                  <input type="text" class="form-control" [(ngModel)]="patientIdentityNumber" [ngModelOptions]="{standalone: true}" placeholder="Tc kimlik numaranızı giriniz" >
+                <label>Tc Kimlik No</label>
+                <input type="text" class="form-control" [(ngModel)]="patientIdentityNumber" [ngModelOptions]="{standalone: true}" placeholder="Tc kimlik numaranızı giriniz" >
               </div>
               
               <div class="form-group">
-                  <label>Randevu Almak İstediğiniz Alanı Seçiniz:</label>
-                  <select class="form-control" [(ngModel)]="specialtyId" [ngModelOptions]="{ standalone: true }" (change)="onSpecialtyChange()">
-                    <option *ngFor="let specialty of specialties" [value]="specialty.id">
-                      {{ specialty.name }}
+                <label>Randevu Almak İstediğiniz Alanı Seçiniz:</label>
+                <select class="form-control" [(ngModel)]="specialtyId" [ngModelOptions]="{ standalone: true }" (change)="onSpecialtyChange()">
+                  <option *ngFor="let specialty of specialties" [value]="specialty.id">
+                    {{ specialty.name }}
                   </option>
-                  </select>
+                </select>
               </div>
+
               <div class="form-group" *ngIf="doctors.length > 0">
                 <label>Doktor Seçiniz:</label>
-                <select class="form-control" [(ngModel)]="doctorId" [ngModelOptions]="{ standalone: true }">
+                <select class="form-control" [(ngModel)]="doctorId" [ngModelOptions]="{ standalone: true }" (change)="onDoctorChange()">
                   <option *ngFor="let doctor of doctors" [value]="doctor.id">{{ doctor.name }} {{ doctor.surname }}</option>
                 </select>
               </div>
 
-            <div class="form-group">
-              <label>Tarih Seçiniz:</label>
-              <input type="datetime-local" class="form-control" [(ngModel)]="appointmentDate" [ngModelOptions]="{standalone: true}" >
+              <div class="form-group" *ngIf="availableDates.length > 0">
+                <label>Tarih Seçiniz:</label>
+                <input type="date" class="form-control" [(ngModel)]="selectedDate" [ngModelOptions]="{standalone: true}"
+                  [min]="minDate" [max]="maxDate" (change)="onDateChange()"
+                  [disabled]="availableDates.length === 0">
+              </div>
 
-            </div>
-
-              <br/>
-      
-              <br/>
+              <div class="form-group" *ngIf="availableHours.length > 0">
+                <label>Saat Seçiniz:</label>
+                <select class="form-control" [(ngModel)]="selectedHour" [ngModelOptions]="{standalone: true}">
+                  <option *ngFor="let hour of availableHours" [value]="hour">{{ hour }}</option>
+                </select>
+              </div>
+              <br>
               <div *ngIf="errorMessage" class="alert alert-danger">
                 {{ errorMessage }}
               </div>
               <div *ngIf="message" class="alert alert-primary">
                 {{message}}
-
               </div>
+
               <br>
               <button type="submit" class="btn btn-primary" (click)="create()">Randevu Al</button>
             </form>

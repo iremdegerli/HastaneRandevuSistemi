@@ -16,8 +16,15 @@ export class AppointmentBookingComponent implements OnInit {
   doctorId: string = "";
   doctors: any[] = [];
   errorMessage: string = "";
-  message: string="";
+  message: string = "";
   appointmentDate: string = ""; 
+  workingHours: any[] = [];
+  availableDates: any[] = [];
+  availableHours: string[] = [];
+  selectedDate: string = "";
+  selectedHour: string = "";
+  minDate: string = "";
+  maxDate: string = "";
 
   constructor(private http: HttpClient) { }
 
@@ -37,58 +44,96 @@ export class AppointmentBookingComponent implements OnInit {
     }
   }
 
-  formatDateTime(date: Date): string {
+  onDoctorChange() {
+    if (this.doctorId) {
+      this.http.get(`http://localhost:8080/api/working-hours/doctor/${this.doctorId}`)
+        .subscribe((data: any) => {
+          this.workingHours = data;
+          this.setAvailableDates();
+        });
+    }
+  }
+
+  setAvailableDates() {
+    const today = new Date();
+    this.availableDates = this.workingHours.map(wh => new Date(wh.date))
+      .filter(date => date >= today)
+      .sort((a, b) => a.getTime() - b.getTime());
+    
+    if (this.availableDates.length > 0) {
+      this.minDate = this.formatDate(this.availableDates[0]);
+      this.maxDate = this.formatDate(this.availableDates[this.availableDates.length - 1]);
+    }
+  }
+
+  onDateChange() {
+    const selectedWorkingHours = this.workingHours.find(wh => new Date(wh.date).toISOString().slice(0, 10) === this.selectedDate);
+    if (selectedWorkingHours) {
+      this.setAvailableHours(selectedWorkingHours);
+    }
+  }
+
+  setAvailableHours(workingHours: any) {
+    const startHour = workingHours.startTime.split(':')[0];
+    const endHour = workingHours.endTime.split(':')[0];
+    this.availableHours = [];
+    for (let i = +startHour; i <= +endHour; i++) {
+      this.availableHours.push(i + ":00");
+    }
+  }
+
+  formatDate(date: Date): string {
     const pad = (num: number) => (num < 10 ? '0' + num : num);
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
   }
 
   create() {
-    if (!this.patientName || !this.patientSurname || !this.patientIdentityNumber || !this.doctorId || !this.specialtyId || !this.appointmentDate) {
+    if (!this.patientName || !this.patientSurname || !this.patientIdentityNumber || !this.doctorId || !this.specialtyId || !this.selectedDate || !this.selectedHour) {
       this.errorMessage = "Lütfen tüm alanları doldurduğunuzdan emin olun!";
       this.clearMessages();
       return;
     }
 
-    // appointmentDate string olduğu için önce Date nesnesine çevirelim
-    const date = new Date(this.appointmentDate);  // Eğer string formatı uygun değilse burada hata verebilir.
-
-    if (isNaN(date.getTime())) {
-      this.errorMessage = "Geçersiz tarih formatı!";
-      this.clearMessages();
-      return;
-    }
-
-    // Tarihi uygun formata çevir
-    const formattedDate = this.formatDateTime(date);
+    const appointmentDate = new Date(`${this.selectedDate}T${this.selectedHour}:00`);
+    console.log("Form verisi:", {
+      patientName: this.patientName,
+      patientSurname: this.patientSurname,
+      patientIdentityNumber: this.patientIdentityNumber,
+      doctorId: this.doctorId,
+      specialtyId: this.specialtyId,
+      appointmentDate: this.appointmentDate
+    });
 
     let bodyData = {
       "patientName": this.patientName,
       "patientSurname": this.patientSurname,
       "patientIdentityNumber": this.patientIdentityNumber,
-      "specialtyId":  this.specialtyId ,
-      "doctorId": this.doctorId ,
-      "appointmentDate": formattedDate,
+      "specialtyId":  this.specialtyId,
+      "doctorId": this.doctorId,
+      "appointmentDate": appointmentDate.toISOString()
     };
+
 
     this.http.post("http://localhost:8080/api/appointments", bodyData, { responseType: 'text' })
     .subscribe(
       (data: any) => {
+        console.log("Randevu oluşturma başlatıldı.");
+
         console.log(data);
-        this.message="Randevu başarıyla oluşturuldu.";
+        this.message = "Randevu başarıyla oluşturuldu.";
         this.clearMessages();
       },
       (error) => {
-        console.log(bodyData);
         console.error('Hata oluştu:', error);
         this.errorMessage = "Randevu alma sırasında bir hata oluştu, lütfen tekrar deneyin.";
         this.clearMessages();
       });
-      
   }
+
   clearMessages() {
     setTimeout(() => {
       this.errorMessage = "";
-      this.message="";
+      this.message = "";
     }, 5000); 
   }
 }
