@@ -37,6 +37,18 @@
       <!-- Çalışma Saatleri Tablosu -->
   <div *ngIf="showHoursList ">
     <h4>Çalışma Saatleri</h4>
+    <table class="info-table">
+      <thead>
+        <th>Dışarda</th>
+        <th>Müsait</th>
+        <th>Randevu</th>
+      </thead>
+      <tbody>
+        <td class="non-working-hour"></td>
+        <td class="working-hour"></td>
+        <td class="appointment-hour"></td>
+      </tbody>
+    </table><br>
     <table class="doctor-table">
       <thead>
         <tr>
@@ -49,7 +61,7 @@
         <tr *ngFor="let hour of hoursRange(8, 18)">
           <td>{{ hour }}:00</td>
           <!-- Her bir doktor çalışma saatini kontrol eder -->
-          <td *ngFor="let workingHour of workingHours" [ngClass]="getHourClass(hour, workingHour)">
+          <td *ngFor="let workingHour of workingHours" [ngClass]="getHourClass(hour, workingHour, appointments)">
             {{ hour }}:00
           </td>
         </tr>

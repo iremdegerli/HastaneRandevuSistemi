@@ -56,7 +56,29 @@
     border-collapse: collapse; /* Çizgilerin kesintisiz olması için */
   
     th, td {
-      border: 1px solid #ddd; /* Hücreler arası çizgi */
+      border: 1px solid #393939; /* Hücreler arası çizgi */
+      padding: 8px;
+      text-align: left;
+    }
+  
+    th {
+      background-color: #f2f2f2; /* Başlık satırı için arka plan rengi */
+    }
+  
+    tr:nth-child(even) {
+      background-color: #f9f9f9; /* Alternatif satırlar için arka plan rengi */
+    }
+  
+    tr:hover {
+      background-color: #f1f1f1; /* Üzerine gelindiğinde satır rengi değişimi */
+    }
+  }
+  .info-table {
+    width: 25%;
+    border-collapse: collapse; /* Çizgilerin kesintisiz olması için */
+  
+    th, td {
+      border: 1px solid #393939; /* Hücreler arası çizgi */
       padding: 8px;
       text-align: left;
     }
@@ -81,7 +103,7 @@ table {
   }
   
   th, td {
-  border: 1px solid #ddd;
+  border: 1px solid #000000;
   padding: 8px;
   text-align: center;
   }
@@ -91,17 +113,17 @@ table {
   }
   
   .appointment-hour {
-    background-color: #cce5ff; /* Mavi renk */
+    background-color: #87c1ff; /* Mavi renk */
     color: black;
   }
   
   .working-hour {
-    background-color: #d4edda; /* Yeşil renk */
+    background-color: #bbebc6; /* Yeşil renk */
     color: black;
   }
   
   .non-working-hour {
-    background-color: #f8d7da; /* Kırmızı renk */
+    background-color: #ff616e; /* Kırmızı renk */
     color: black;
   }
 

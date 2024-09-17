@@ -73,20 +73,30 @@ export class DoctorPanelComponent implements OnInit {
   }
 
   // Saatin çalışma saatleri ve ek saatler arasında olup olmadığını kontrol eden fonksiyon
-  getHourClass(hour: number, workingHour: WorkingHours): string {
+  getHourClass(hour: number, workingHour: WorkingHours, appointments: any[]): string {
     const startHour = +workingHour.startTime.split(':')[0]; // Başlangıç saatini al
     const endHour = +workingHour.endTime.split(':')[0]; // Bitiş saatini al
     const isWorking = hour >= startHour && hour <= endHour; // Çalışma saati kontrolü
-
+  
     // Ek çalışma saatlerini kontrol et
     const isAdditionalWorking = workingHour.additionalHours.some(addHour => {
       const addStartHour = +addHour.startTime.split(':')[0];
       const addEndHour = +addHour.endTime.split(':')[0];
       return hour >= addStartHour && hour < addEndHour;
     });
-
+  
+    // Randevu saatlerini kontrol et
+    const isAppointment = appointments.some(appointment => {
+      const appointmentDate = new Date(appointment.appointmentDate);
+      const appointmentHour = appointmentDate.getHours();
+      return appointmentDate.toDateString() === new Date(workingHour.date).toDateString() &&
+             appointmentHour === hour;
+    });
+  
     // Saatin hangi renge boyanacağını döndür
-    if (isAdditionalWorking) {
+    if (isAppointment) {
+      return 'appointment-hour'; // Mavi renk (randevu saati)
+    } else if (isAdditionalWorking) {
       return 'non-working-hour'; // Kırmızı renk (ek saat)
     } else if (isWorking) {
       return 'working-hour'; // Yeşil renk (normal çalışma saati)
@@ -94,7 +104,7 @@ export class DoctorPanelComponent implements OnInit {
       return 'non-working-hour'; // Varsayılan renk (saat çalışma saatleri dışında)
     }
   }
-
+  
 
 
   AppointmentOn() {
@@ -145,18 +155,15 @@ export class DoctorPanelComponent implements OnInit {
       this.ds.getAppointmentsByDoctor(currentUser.id).subscribe(
         (data) => {
           this.appointments = data;
+          this.loadWorkingHours(); // Randevular yüklendiğinde çalışma saatlerini tekrar yükleyin
         },
         (error) => {
           this.errorMessage = "Randevular yüklenirken bir hata oluştu.";
-          this.clearMessages();
-
           console.error('Error loading appointments:', error);
         }
       );
     } else {
       this.errorMessage = "Kullanıcı bilgileri mevcut değil.";
-      this.clearMessages();
-
     }
   }
   
@@ -170,14 +177,10 @@ export class DoctorPanelComponent implements OnInit {
         (error) => {
           this.errorMessage = "Çalışma saatleri yüklenirken bir hata oluştu.";
           console.error('Error loading working hours:', error);
-          this.clearMessages();
-
         }
       );
     } else {
       this.errorMessage = "Kullanıcı bilgileri mevcut değil.";
-      this.clearMessages();
-
     }
   }
   sortWorkingHoursByDate(workingHours: WorkingHours[]): WorkingHours[] {
