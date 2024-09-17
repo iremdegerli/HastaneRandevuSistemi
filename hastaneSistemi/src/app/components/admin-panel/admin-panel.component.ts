@@ -38,15 +38,47 @@ export class AdminPanelComponent implements OnInit {
   selectedDoctorName:string='';
   
   appointments: any[]=[];
-  
+  hours: number[] = []; // Saat aralığı dizisi
+
 
   constructor(private http: HttpClient, private ds: DoctorService, private ss: SpecialtyService, private ws: WorkingHoursService) { }
 
   ngOnInit(): void {
     this.getSpecialties();
     this.loadDoctors();
-
+    this.hours = this.hoursRange(8, 18);
   }
+  hoursRange(start: number, end: number): number[] {
+    const range = [];
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+    return range;
+  }
+   // Saatin çalışma saatleri ve ek saatler arasında olup olmadığını kontrol eden fonksiyon
+   getHourClass(hour: number, workingHour: WorkingHours): string {
+    const startHour = +workingHour.startTime.split(':')[0]; // Başlangıç saatini al
+    const endHour = +workingHour.endTime.split(':')[0]; // Bitiş saatini al
+    const isWorking = hour >= startHour && hour <= endHour; // Çalışma saati kontrolü
+
+    // Ek çalışma saatlerini kontrol et
+    const isAdditionalWorking = workingHour.additionalHours.some(addHour => {
+      const addStartHour = +addHour.startTime.split(':')[0];
+      const addEndHour = +addHour.endTime.split(':')[0];
+      return hour >= addStartHour && hour < addEndHour;
+    });
+
+    // Saatin hangi renge boyanacağını döndür
+    if (isAdditionalWorking) {
+      return 'non-working-hour'; // Kırmızı renk (ek saat)
+    } else if (isWorking) {
+      return 'working-hour'; // Yeşil renk (normal çalışma saati)
+    } else {
+      return 'non-working-hour'; // Varsayılan renk (saat çalışma saatleri dışında)
+    }
+  }
+
+
 
   SpecialtyOn() {
     this.showSpecialtyList = !this.showSpecialtyList;
@@ -253,15 +285,32 @@ export class AdminPanelComponent implements OnInit {
     // Belirli bir doktorun çalışma saatlerini getir
   getWorkingHoursByDoctor(doctorId: number) {
     this.ws.getWorkingHoursByDoctor(doctorId).subscribe(
-      (response: any[]) => {
-      this.workingHours = response;
+      (data) => {
+      this.workingHours = this.sortWorkingHoursByDate(data);
       },
       (error) => {
-      console.error("Çalışma saatleri getirilemedi:", error);
+        this.errorMessage = "Çalışma saatleri yüklenirken bir hata oluştu.";
+        console.error('Error loading working hours:', error);
+        this.clearMessages();
       }
     );
   }
-
+  sortWorkingHoursByDate(workingHours: WorkingHours[]): WorkingHours[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Bugünün tarihini saat kısmı olmadan al
+  
+    const maxDate = new Date(today);
+    maxDate.setDate(today.getDate() + 6); // Bugünden itibaren 5 gün sonrası
+  
+    return workingHours
+      .filter(wh => {
+        const whDate = new Date(wh.date);
+        whDate.setHours(0, 0, 0, 0); // Çalışma saatlerini saat kısmı olmadan al
+        return whDate >= today && whDate <= maxDate; // Bugünden itibaren 5 gün içindeki tarihler
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); // Tarihe göre sırala
+  }
+  
   clearMessages() {
     setTimeout(() => {
       this.errorMessage = "";

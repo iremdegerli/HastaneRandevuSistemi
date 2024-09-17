@@ -1,15 +1,15 @@
 <header>
   <mat-toolbar class="header">
-       <span>User Panel</span>
-       <span class="example-spacer"></span>
-       <nav class="nav">
-        <ul>
-          <li style="float: right;">
-            Hoşgeldiniz, {{currentUser.name}} {{currentUser?.surname}}
-            <button (click)="logout()">Çıkış Yap</button> 
-          </li>
-        </ul>
-      </nav>
+    <span class="title">User Panel</span>
+    <span class="example-spacer"></span>
+    <nav class="nav">
+      <ul>
+        <li class="user-info">
+          Hoşgeldiniz, {{currentUser.name}} {{currentUser?.surname}}
+          <button (click)="logout()" class="logout-button">Çıkış Yap</button>
+        </li>
+      </ul>
+    </nav>
   </mat-toolbar>
 </header>
 

@@ -1,9 +1,11 @@
 <app-panel-header></app-panel-header>
 
 <div class="admin-panel-container">
-  <h2 >Admin Paneli</h2>
-  <p>Doktorları listeleyin ve poliklinikleri görüntüleyin.</p>
-
+  <div class="admin-panel-header">
+    <h2>Admin Paneli</h2>
+    <br>
+    <p class="description">Doktorları listeleyin ve poliklinikleri görüntüleyin.</p>
+  </div>
   <div class="button-group">
     <button [ngClass]="{'active': showSpecialtyList}" (click)="SpecialtyOn()">Alan Listele</button>
     <button [ngClass]="{'active': showAddSpecialty}" (click)="AddOn()">Alan Ekle</button>
@@ -150,29 +152,25 @@
       </div>
 
       <!-- Çalışma Saatleri Tablosu -->
-      <div *ngIf="showHoursList && workingHours.length > 0">
-        <h4>Çalışma Saatleri</h4>
-        <table class="working-hours-table">
-          <thead>
-            <tr>
-              <th>Tarih</th>
-              <th>Başlangıç Saati</th>
-              <th>Bitiş Saati</th>
-              <th>Mola Saatleri</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let hour of workingHours">
-              <td>{{ hour.date| date: 'dd/MM/yyyy' }}</td>
-              <td>{{ hour.startTime }}</td>
-              <td>{{ hour.endTime }}</td>
-              <td>
-                <span *ngFor="let additional of hour.additionalHours">
-                  {{ additional.startTime }} - {{ additional.endTime }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
+      <div *ngIf="showHoursList">
+          <h4>Çalışma Saatleri</h4>
+          <table class="doctor-table">
+            <thead>
+              <tr>
+                <th>Tarih</th>
+                <th *ngFor="let workingHour of workingHours">{{ workingHour.date | date:'EEEE, MMMM d, y' }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Saat aralığını başlatmak için döngü -->
+              <tr *ngFor="let hour of hoursRange(8, 18)">
+                <td>{{ hour }}:00</td>
+                <!-- Her bir doktor çalışma saatini kontrol eder -->
+                <td *ngFor="let workingHour of workingHours" [ngClass]="getHourClass(hour, workingHour)">
+                  {{ hour }}:00
+                </td>
+              </tr>
+            </tbody>
         </table>
       </div>
     </div>

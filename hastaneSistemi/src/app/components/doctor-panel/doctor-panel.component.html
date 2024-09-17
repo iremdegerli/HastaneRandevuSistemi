@@ -1,9 +1,14 @@
 <app-panel-header></app-panel-header>
 
 <div class="doctor-panel-container">
-  <h2 >Doktor Paneli</h2>
-  <p>Randevularınızı ve çalışma saatlerinizi görüntüleyin.</p>
-
+  <div class="doctor-panel-header">
+    <h2>Doktor Paneli</h2>
+    <p class="user-info">{{currentUser.name}} {{currentUser?.surname}}</p>
+    <p class="specialty-info">Alan: {{currentUser.specialty.name}}</p>
+    <br>
+    <p class="description">Randevularınızı ve çalışma saatlerinizi güncelleyin.</p>
+  </div>
+  
   <div class="button-group">
     <button [ngClass]="{'active': showAppointmentList}" (click)="AppointmentOn()">Randevu Listele</button>
     <button [ngClass]="{'active': showHoursList}" (click)="HoursOn()">Çalışma Saati Görüntüle</button>
@@ -32,28 +37,25 @@
       <!-- Çalışma Saatleri Tablosu -->
   <div *ngIf="showHoursList ">
     <h4>Çalışma Saatleri</h4>
-    <table>
+    <table class="doctor-table">
       <thead>
         <tr>
           <th>Tarih</th>
-          <th>Başlangıç Saati</th>
-          <th>Bitiş Saati</th>
-          <th>Ara</th>
+          <th *ngFor="let workingHour of workingHours">{{ workingHour.date | date:'EEEE, MMMM d, y' }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let workingHour of workingHours">
-          <td>{{ workingHour.date | date:'dd/MM/yyyy' }}</td>
-          <td>{{ workingHour.startTime }}</td>
-          <td>{{ workingHour.endTime }}</td>
-          <td>
-            <div *ngFor="let additionalHour of workingHour.additionalHours">
-              {{ additionalHour.startTime }} - {{ additionalHour.endTime }}
-            </div>
+        <!-- Saat aralığını başlatmak için döngü -->
+        <tr *ngFor="let hour of hoursRange(8, 18)">
+          <td>{{ hour }}:00</td>
+          <!-- Her bir doktor çalışma saatini kontrol eder -->
+          <td *ngFor="let workingHour of workingHours" [ngClass]="getHourClass(hour, workingHour)">
+            {{ hour }}:00
           </td>
         </tr>
       </tbody>
     </table>
+    
     <br>
 
     <div class="button-group">
@@ -75,13 +77,15 @@
         <label for="endTime">Bitiş Saati:</label>
         <input id="endTime" type="time" [(ngModel)]="newWorkingHour.endTime" name="endTime" required>
 
-        <label for="additionalHours">Ek Saatler:</label>
+        <label for="additionalHours">Ara:</label>
         <div *ngFor="let additionalHour of newWorkingHour.additionalHours; let i = index">
+          <label>Ara Başlangıç Saati:</label>
           <input type="time" [(ngModel)]="additionalHour.startTime" name="additionalStartTime{{i}}" placeholder="Başlangıç Saati">
+          <label>Ara Bitiş Saati:</label>
           <input type="time" [(ngModel)]="additionalHour.endTime" name="additionalEndTime{{i}}" placeholder="Bitiş Saati">
-          <button type="button" (click)="removeAdditionalHour(i)">Kaldır</button>
+          <button type="button" (click)="removeAdditionalHour(i)">Ara Sil</button>
         </div>
-        <button type="button" (click)="addAdditionalHour()">Ek Saat Ekle</button>
+        <button type="button" (click)="addAdditionalHour()">Ara Ekle</button><br>
         <div *ngIf="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
         </div>
@@ -111,27 +115,27 @@
     
         <label for="updateEndTime">Yeni Bitiş Saati:</label>
         <input type="time" id="updateEndTime" [(ngModel)]="newWorkingHour.endTime">
-        
-        <h5>Ek Saatler:</h5>
+
+        <label for="additionalHours">Ara:</label>
         <div *ngFor="let hour of newWorkingHour.additionalHours; let i = index">
-          <label>Ek Başlangıç Saati:</label>
+          <label>Ara Başlangıç Saati:</label>
           <input type="time" [(ngModel)]="newWorkingHour.additionalHours[i].startTime">
     
-          <label>Ek Bitiş Saati:</label>
+          <label>Ara Bitiş Saati:</label>
           <input type="time" [(ngModel)]="newWorkingHour.additionalHours[i].endTime">
           
-          <button (click)="removeAdditionalHour(i)">Sil</button>
+          <button (click)="removeAdditionalHour(i)">Ara Sil</button>
         </div>
-        <button (click)="addAdditionalHour()">Ek Saat Ekle</button>
-    
-        <button (click)="updateWorkingHours()">Güncelle</button>
-    
+        <button (click)="addAdditionalHour()">Ara Ekle</button><br>
+        
         <div *ngIf="errorMessage" class="alert alert-danger">
           {{ errorMessage }}
         </div>
         <div *ngIf="message" class="alert alert-primary">
           {{message}}
         </div>
+        <button (click)="updateWorkingHours()">Güncelle</button>
+    
       </div>
     </div> 
 
@@ -144,12 +148,14 @@
           {{ workingHour.date }}
         </option>
       </select>
+      <br>
       <div *ngIf="errorMessage" class="alert alert-danger">
         {{ errorMessage }}
       </div>
       <div *ngIf="message" class="alert alert-primary">
         {{message}}
       </div>
+      <br>
       <button (click)="deleteWorkingHours()">Kaldır</button>
     
       </div>

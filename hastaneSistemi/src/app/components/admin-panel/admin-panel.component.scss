@@ -74,37 +74,52 @@
     }
   }
 
-  /* admin-panel.component.css */
+/* admin-panel.component.css */
 table {
   width: 100%;
   border-collapse: collapse;
-}
-
-th, td {
+  }
+  
+  th, td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
-}
-
-th {
+  }
+  
+  th {
   background-color: #f4f4f4;
+  }
+  
+  .working-hour {
+    background-color: #7bdc91;
+    color: #7bdc91;
+  }
+  
+  .non-working-hour {
+    background-color: #ff4958;
+    color: #ff4958;
+  }
+
+.admin-panel-header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.working {
-  background-color: #d4edda; /* Yeşil renk */
+.admin-panel-header h2 {
+  font-size: 2em;
+  color: #007bff;
+  margin: 0;
 }
 
-.non-working {
-  background-color: #f8d7da; /* Kırmızı renk */
+.admin-panel-header p {
+  font-size: 1.1em;
+  margin: 5px 0;
+  color: #333;
 }
 
-.working-hour {
-  background-color: green;
-  color: white;
+.admin-panel-header .user-info {
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
-.non-working-hour {
-  background-color: red;
-  color: white;
-}
 
