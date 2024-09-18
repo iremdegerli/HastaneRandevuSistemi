@@ -1,6 +1,108 @@
-.deneme{
-    padding: 0px 30px;
+/* Genel Stil */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: #ffe9fbf1; /* Açık pembe arka plan */
+  }
+  
+  /* Ana Container Stili */
+  .home-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Welcome Bölümü */
+  .welcome-section {
+    padding: 50px;
+    background-color: #d43f77; /* Koyu pembe başlık rengiyle uyumlu */
+    color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .welcome-section h1 {
+    font-size: 36px;
+    margin: 0;
+  }
+  
+  .welcome-section p {
+    font-size: 18px;
+    margin: 20px 0;
+  }
+  
+  .button-container {
+    margin-top: 20px;
+  }
+  
+  .button {
+    display: inline-block;
+    font-size: 18px;
+    padding: 10px 20px;
     margin: 10px;
-    color: rgb(255, 255, 255);
-    font-size: large;
-}
+    color: #ffffff;
+    background-color: #0b3765; /* Başlık ile uyumlu koyu mavi */
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #0d527b; /* Daha koyu mavi hover efekti */
+  }
+  
+  /* Bilgi Bölümü */
+  .info-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  .info-box {
+    background-color: #ffffff;
+    border: 1px solid #d43f77; /* Koyu pembe bordür */
+    border-radius: 8px;
+    padding: 20px;
+    width: 45%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .info-box h2 {
+    font-size: 24px;
+    margin-top: 0;
+  }
+  
+  .info-box p {
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  
+  .info-link {
+    display: inline-block;
+    font-size: 16px;
+    padding: 10px 15px;
+    color: #d43f77; /* Koyu pembe bağlantı */
+    text-decoration: none;
+    border: 1px solid #d43f77; /* Koyu pembe bordür */
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .info-link:hover {
+    background-color: #d43f77; /* Koyu pembe arka plan */
+    color: #ffffff; /* Beyaz metin */
+  }
+  
+  /* Mobil için uyumlu düzen */
+  @media (max-width: 768px) {
+    .info-section {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .info-box {
+      width: 90%;
+      margin-bottom: 20px;
+    }
+  }
+  

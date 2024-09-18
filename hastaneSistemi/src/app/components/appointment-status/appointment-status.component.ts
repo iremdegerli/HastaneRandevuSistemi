@@ -44,11 +44,11 @@ export class AppointmentStatusComponent implements OnInit{
     this.http.post<any[]>("http://localhost:8080/api/appointments/patient/" + this.patientIdentityNumber, bodyData)
       .subscribe((data: any[]) => {
         if (data && data.length > 0) {
-          this.appointments = data;  // Randevuları sakla
-          this.errorMessage = "";  // Hata mesajını temizle
+          this.appointments = data;  
+          this.errorMessage = ""; 
         } else {
           this.appointments = [];
-          this.errorMessage = "Randevu bulunamadı.";  // Eğer randevu yoksa hata mesajı göster
+          this.errorMessage = "Randevu bulunamadı."; 
           this.clearMessages();
         }
       },

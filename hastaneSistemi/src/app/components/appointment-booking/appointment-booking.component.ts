@@ -93,15 +93,18 @@ export class AppointmentBookingComponent implements OnInit {
       this.clearMessages();
       return;
     }
-
+    
     const appointmentDate = new Date(`${this.selectedDate}T${this.selectedHour}:00`);
+    appointmentDate.setHours(appointmentDate.getHours() + 3);//+3 ün sebebi saat farklı olması.
+
+    const formattedDate = appointmentDate.toLocaleString('sv-SE'); 
     console.log("Form verisi:", {
       patientName: this.patientName,
       patientSurname: this.patientSurname,
       patientIdentityNumber: this.patientIdentityNumber,
       doctorId: this.doctorId,
       specialtyId: this.specialtyId,
-      appointmentDate: this.appointmentDate
+      appointmentDate: appointmentDate
     });
 
     let bodyData = {
@@ -110,7 +113,7 @@ export class AppointmentBookingComponent implements OnInit {
       "patientIdentityNumber": this.patientIdentityNumber,
       "specialtyId":  this.specialtyId,
       "doctorId": this.doctorId,
-      "appointmentDate": appointmentDate.toISOString()
+      "appointmentDate": appointmentDate
     };
 
 

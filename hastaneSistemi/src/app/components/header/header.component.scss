@@ -1,60 +1,140 @@
-.header{
-  padding: 40px;
-  background-color: #0b3765d1;
-}
-span{
-  color: rgb(255, 241, 241);
-  font-size: 40px;
+/* Ana Menü Stili */
+.header {
+  padding: 30px;
+  background-color: #3b2d8a ;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px #3b2d8a78;
 }
 
-.example-spacer{
-  flex:2 2 auto;
+.header span {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: bold;
 }
-.nav{
-  padding: 30px;
+
+.example-spacer {
+  flex: 1;
 }
-  nav ul {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+
+.nav {
+  padding: 0;
+  margin-right: 40px;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+nav ul li {
+  position: relative;
   
-  nav ul li {
-    position: relative;
+}
+
+nav ul li a {
+  font-size: 16px;
+  display: block;
+  padding: 10px 15px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-radius: 4px;
+}
+
+nav ul li a:hover {
+  background-color: #ffd6d6;
+  color: #333;
+}
+
+/* Alt Menü Stili */
+nav ul ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1000;
+  padding: 0;
+  min-width: 60px; /* Alt menü genişliği */
+}
+
+nav ul li:hover > ul {
+  display: block;
+}
+
+nav ul ul li {
+  width: 100%;
+}
+
+nav ul ul li a {
+  padding: 10px 15px;
+  color: #ffffff;
+  text-align: left; /* Alt menüdeki yazılar sola yaslı olacak */
+  white-space: nowrap; /* Uzun metinler taşmayacak şekilde gösterilecek */
+}
+
+nav ul ul li a:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+/* Alt Alt Menü Stili (Gelişmiş Alt Menü) */
+nav ul ul ul {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1001;
+}
+
+nav ul ul li:hover > ul {
+  display: block;
+}
+
+/* Hover sırasında ana menüdeki bağlantının rengi */
+nav ul li:hover a {
+  background-color: #0d527b;
+  color: #fff;
+}
+
+/* Mobil için uyumlu düzen */
+@media (max-width: 768px) {
+  .header {
+      flex-direction: column;
+      align-items: flex-start;
   }
-  
-  nav ul li a {
-    font-size: 18px;
-    display: block;
-    padding: 5px 15px;
-    color: rgb(255, 255, 255);
-    text-decoration: none;
+
+  .nav ul {
+      flex-direction: column;
+      width: 100%;
   }
-  
-  nav ul li a:hover {
-    background-color: #ffd6d6ec;
-    color: black;
-    width:max-content;
+
+  .nav ul li {
+      margin-left: 0;
+      width: 100%;
   }
-  
+
+  .nav ul li a {
+      width: 50%;
+  }
+
   nav ul ul {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
+      position: static;
+      box-shadow: none;
   }
-  
-  nav ul li:hover > ul {
-    display: block;
-  }
-  
-  nav ul ul li {
-    width: 200px;
-  }
-  
+
   nav ul ul ul {
-    left: 100%;
-    top: 0;
+      left: 0;
+      top: auto;
   }
-  
+}

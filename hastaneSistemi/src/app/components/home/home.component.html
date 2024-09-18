@@ -1,9 +1,26 @@
 <app-header></app-header>
 
-
-<div class="deneme"><p>Hastane Randevu sistemi</p></div>
-<li>
-<a routerLink="/admin">Admin Paneli</a>
-</li><li>
-<a routerLink="/doctor">Doktor Paneli</a>
-</li>
+<main class="home-container">
+  <section class="welcome-section">
+    <h1>Hastane Randevu Sistemi</h1>
+    <p>Hoşgeldiniz! Sağlığınız için randevu alabilir veya mevcut randevularınızı görüntüleyebilirsiniz.</p>
+    <div class="button-container">
+      <a routerLink="/randevu-al" class="button">Randevu Al</a>
+      <a routerLink="/randevu-bul" class="button">Randevu Bul</a>
+    </div>
+  </section>
+  
+  <section class="info-section">
+    <div class="info-box">
+      <h2>Admin Paneli</h2>
+      <p>Polikliniklerinizi ve doktorlarınızı gönrüntüleyin.</p>
+      <a routerLink="/admin" class="info-link">Admin Girişi</a>
+    </div>
+    
+    <div class="info-box">
+      <h2>Doktor Paneli</h2>
+      <p>Mevcut randevularınızı ve çalışma saatlerinizi görüntülemek ve yönetmek için buraya tıklayın.</p>
+      <a routerLink="/doctor" class="info-link">Doktor Girişi</a>
+    </div>
+  </section>
+</main>

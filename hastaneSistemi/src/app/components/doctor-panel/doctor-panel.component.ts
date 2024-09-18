@@ -35,7 +35,6 @@ export class DoctorPanelComponent implements OnInit {
   updateForm: FormGroup;
   hours: number[] = []; // Saat aralığı dizisi
 
-
   newWorkingHour: WorkingHours = {
     id: 0,
     doctor: { id: 0 },
@@ -45,7 +44,6 @@ export class DoctorPanelComponent implements OnInit {
     isOccupied: false,
     additionalHours: []
   };
-
 
   constructor(private http: HttpClient, private as:AuthService, private ds: DoctorService, private ws:WorkingHoursService, private fb:FormBuilder) {
     this.updateForm = this.fb.group({
@@ -63,7 +61,7 @@ export class DoctorPanelComponent implements OnInit {
     this.currentUser=this.as.currentUserValue;
 
   }
-  // Saat aralığını döndüren fonksiyon
+
   hoursRange(start: number, end: number): number[] {
     const range = [];
     for (let i = start; i <= end; i++) {
@@ -72,20 +70,18 @@ export class DoctorPanelComponent implements OnInit {
     return range;
   }
 
-  // Saatin çalışma saatleri ve ek saatler arasında olup olmadığını kontrol eden fonksiyon
+
   getHourClass(hour: number, workingHour: WorkingHours, appointments: any[]): string {
-    const startHour = +workingHour.startTime.split(':')[0]; // Başlangıç saatini al
-    const endHour = +workingHour.endTime.split(':')[0]; // Bitiş saatini al
-    const isWorking = hour >= startHour && hour <= endHour; // Çalışma saati kontrolü
+    const startHour = +workingHour.startTime.split(':')[0]; 
+    const endHour = +workingHour.endTime.split(':')[0]; 
+    const isWorking = hour >= startHour && hour <= endHour;
   
-    // Ek çalışma saatlerini kontrol et
     const isAdditionalWorking = workingHour.additionalHours.some(addHour => {
       const addStartHour = +addHour.startTime.split(':')[0];
       const addEndHour = +addHour.endTime.split(':')[0];
       return hour >= addStartHour && hour < addEndHour;
     });
   
-    // Randevu saatlerini kontrol et
     const isAppointment = appointments.some(appointment => {
       const appointmentDate = new Date(appointment.appointmentDate);
       const appointmentHour = appointmentDate.getHours();
@@ -93,19 +89,17 @@ export class DoctorPanelComponent implements OnInit {
              appointmentHour === hour;
     });
   
-    // Saatin hangi renge boyanacağını döndür
     if (isAppointment) {
-      return 'appointment-hour'; // Mavi renk (randevu saati)
+      return 'appointment-hour'; 
     } else if (isAdditionalWorking) {
-      return 'non-working-hour'; // Kırmızı renk (ek saat)
+      return 'non-working-hour'; 
     } else if (isWorking) {
-      return 'working-hour'; // Yeşil renk (normal çalışma saati)
+      return 'working-hour'; 
     } else {
-      return 'non-working-hour'; // Varsayılan renk (saat çalışma saatleri dışında)
+      return 'non-working-hour';
     }
   }
   
-
 
   AppointmentOn() {
     this.showAppointmentList = !this.showAppointmentList;
@@ -155,7 +149,7 @@ export class DoctorPanelComponent implements OnInit {
       this.ds.getAppointmentsByDoctor(currentUser.id).subscribe(
         (data) => {
           this.appointments = data;
-          this.loadWorkingHours(); // Randevular yüklendiğinde çalışma saatlerini tekrar yükleyin
+          this.loadWorkingHours(); 
         },
         (error) => {
           this.errorMessage = "Randevular yüklenirken bir hata oluştu.";
@@ -185,22 +179,20 @@ export class DoctorPanelComponent implements OnInit {
   }
   sortWorkingHoursByDate(workingHours: WorkingHours[]): WorkingHours[] {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Bugünün tarihini saat kısmı olmadan al
+    today.setHours(0, 0, 0, 0); 
   
     const maxDate = new Date(today);
-    maxDate.setDate(today.getDate() + 6); // Bugünden itibaren 5 gün sonrası
+    maxDate.setDate(today.getDate() + 6); 
   
     return workingHours
       .filter(wh => {
         const whDate = new Date(wh.date);
-        whDate.setHours(0, 0, 0, 0); // Çalışma saatlerini saat kısmı olmadan al
-        return whDate >= today && whDate <= maxDate; // Bugünden itibaren 5 gün içindeki tarihler
+        whDate.setHours(0, 0, 0, 0); 
+        return whDate >= today && whDate <= maxDate;
       })
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); // Tarihe göre sırala
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); 
   }
   
-  
-
   workingHoursload() {
     const doctorId = this.as.currentUserValue.id; 
     this.ws.getWorkingHoursByDoctor(doctorId).subscribe(
@@ -279,7 +271,7 @@ export class DoctorPanelComponent implements OnInit {
       this.ws.addWorkingHours(this.newWorkingHour).subscribe(
         (data) => {
           this.message = "Çalışma saati başarıyla eklendi.";
-          this.loadWorkingHours(); // Güncellenmiş çalışma saatlerini yeniden yükle
+          this.loadWorkingHours();
           this.clearMessages();
         },
         (error) => {
