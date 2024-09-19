@@ -125,45 +125,59 @@ export class AppointmentBookingComponent implements OnInit {
       this.clearMessages();
       return;
     }
-    
-    const appointmentDate = new Date(`${this.selectedDate}T${this.selectedHour}:00`);
-    appointmentDate.setHours(appointmentDate.getHours() + 3);//+3 ün sebebi saat farklı olması.
-
-    const formattedDate = appointmentDate.toLocaleString('sv-SE'); 
-    console.log("Form verisi:", {
-      patientName: this.patientName,
-      patientSurname: this.patientSurname,
-      patientIdentityNumber: this.patientIdentityNumber,
-      doctorId: this.doctorId,
-      specialtyId: this.specialtyId,
-      appointmentDate: appointmentDate
-    });
-
-    let bodyData = {
-      "patientName": this.patientName,
-      "patientSurname": this.patientSurname,
-      "patientIdentityNumber": this.patientIdentityNumber,
-      "specialtyId":  this.specialtyId,
-      "doctorId": this.doctorId,
-      "appointmentDate": appointmentDate
-    };
-
-
-    this.http.post("http://localhost:8080/api/appointments", bodyData, { responseType: 'text' })
-    .subscribe(
-      (data: any) => {
-        console.log("Randevu oluşturma başlatıldı.");
-
-        console.log(data);
-        this.message = "Randevu başarıyla oluşturuldu.";
-        this.clearMessages();
-      },
-      (error) => {
-        console.error('Hata oluştu:', error);
-        this.errorMessage = "Randevu alma sırasında bir hata oluştu, lütfen tekrar deneyin.";
-        this.clearMessages();
-      });
+  
+    // Kimlik numarası ile randevuları kontrol et
+    this.http.get<any[]>(`http://localhost:8080/api/appointments/patient/${this.patientIdentityNumber}`)
+      .subscribe(
+        (appointments: any[]) => {
+          if (appointments.length > 0) {
+            // Aynı kimlik numarasına sahip bir randevu varsa isim ve soyisim kontrol et
+            const existingAppointment = appointments[0]; // İlk randevuya göre kontrol yapılabilir
+  
+            if (existingAppointment.patientName !== this.patientName || existingAppointment.patientSurname !== this.patientSurname) {
+              // İsim ya da soyisim farklıysa hata mesajı göster
+              this.errorMessage = "Girilen kimlik numarasıyla daha önce farklı bir isim ve soyisimle randevu alınmış.";
+              this.clearMessages();
+              return;
+            }
+          }
+  
+          // İsim ve soyisim aynıysa ya da hiç randevu alınmamışsa randevu oluştur
+          const appointmentDate = new Date(`${this.selectedDate}T${this.selectedHour}:00`);
+          appointmentDate.setHours(appointmentDate.getHours() + 3); // +3 saat farkı
+  
+          let bodyData = {
+            "patientName": this.patientName,
+            "patientSurname": this.patientSurname,
+            "patientIdentityNumber": this.patientIdentityNumber,
+            "specialtyId": this.specialtyId,
+            "doctorId": this.doctorId,
+            "appointmentDate": appointmentDate
+          };
+  
+          // Randevu oluşturma isteği
+          this.http.post("http://localhost:8080/api/appointments", bodyData, { responseType: 'text' })
+            .subscribe(
+              (data: any) => {
+                this.message = "Randevu başarıyla oluşturuldu.";
+                this.clearMessages();
+              },
+              (error) => {
+                this.errorMessage = "Randevu alma sırasında bir hata oluştu, lütfen tekrar deneyin.";
+                this.clearMessages();
+              });
+        },
+        (error) => {
+          console.error('Hata oluştu:', error);
+          this.errorMessage = "Kimlik numarasıyla randevu kontrolü sırasında bir hata oluştu.";
+          this.clearMessages();
+        }
+      );
   }
+  
+
+
+  
 
   clearMessages() {
     setTimeout(() => {
