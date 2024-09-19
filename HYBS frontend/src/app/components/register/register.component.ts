@@ -59,15 +59,7 @@ export class RegisterComponent implements OnInit{
             this.clearMessages();
             return;
           }
-          this.http.get('http://localhost:8080/api/auth/check-email/${this.email}').subscribe((response:any)=>{
-            if (response.exists) {
-              // Kimlik numarası kayıtlıysa hata mesajı göster
-              this.errorMessage = "Bu email adresi ile zaten kayıtlı bir kullanıcı var!";
-              this.clearMessages();
-              return;
-            
-            }
-       
+          
           // Kimlik numarası kayıtlı değilse kullanıcıyı kaydet
           this.http.post("http://localhost:8080/api/auth/register", bodyData, { responseType: 'text' })
             .subscribe(
@@ -78,19 +70,10 @@ export class RegisterComponent implements OnInit{
               },
               (error) => {
                 console.error('Kayıt sırasında hata oluştu:', error);
-                this.errorMessage = "Kayıt sırasında bir hata oluştu, lütfen tekrar deneyin.";
+                this.errorMessage = "Bu email kayıtlı! Lütfen başka bir email kullanın.";
                 this.clearMessages();
               }
             );//
-          },
-          (error) => {
-            console.error('Email kontrolünde hata oluştu:', error);
-            this.errorMessage = "Email kontrolü sırasında bir hata oluştu, lütfen tekrar deneyin.";
-            this.clearMessages();
-          }
-        
-        );
-          
         },
         (error) => {
           console.error('Kimlik numarası kontrolünde hata oluştu:', error);
