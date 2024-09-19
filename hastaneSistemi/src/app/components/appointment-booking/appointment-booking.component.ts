@@ -26,6 +26,7 @@ export class AppointmentBookingComponent implements OnInit {
   minDate: string = "";
   maxDate: string = "";
 
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -96,6 +97,20 @@ export class AppointmentBookingComponent implements OnInit {
         });
       });
     }
+
+    this.http.get<any[]>(`http://localhost:8080/api/appointments/doctors/${this.doctorId}`)
+    .subscribe((appointments: any[]) => {
+
+      const selectedAppointments = appointments.filter(appointment => {
+        return new Date(appointment.appointmentDate).toISOString().slice(0, 10) === this.selectedDate;
+      });
+
+
+      selectedAppointments.forEach(appointment => {
+        const appointmentHour = appointment.appointmentDate.split('T')[1].slice(0, 2) + ":00"; 
+        this.availableHours = this.availableHours.filter(hour => hour !== appointmentHour);
+      });
+    });
   }
   
 
