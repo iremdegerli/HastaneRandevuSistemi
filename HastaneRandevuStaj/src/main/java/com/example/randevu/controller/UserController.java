@@ -11,10 +11,18 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = {"http://localhost:4200"})
+
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.findAllUsers();
+        return ResponseEntity.ok(users);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
@@ -27,5 +35,9 @@ public class UserController {
         Optional<User> user = userService.findByIdentityNumber(identityNumber);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    // Kullanıcı güncelleme veya silme gibi işlemler eklenebilir
+    @GetMapping("/doctors")
+    public ResponseEntity<List<User>> getDoctorsBySpecialty(@RequestParam Long specialtyId) {
+        List<User> doctors = userService.findDoctorsBySpecialty(specialtyId);
+        return ResponseEntity.ok(doctors);
+    }
 }

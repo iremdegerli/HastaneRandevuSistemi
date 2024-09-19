@@ -1,4 +1,5 @@
 package com.example.randevu.controller;
+
 import com.example.randevu.dto.LoginRequest;
 import com.example.randevu.entity.User;
 import com.example.randevu.service.UserService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -16,14 +18,24 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.saveUser(user));
+        try {
+            return ResponseEntity.ok(userService.saveUser(user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+
+        System.out.println("Login Request: " + loginRequest); // Debug log
         boolean isAuthenticated = userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword());
         if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
+            User user = userService.findByEmail(loginRequest.getEmail()).orElse(null);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }

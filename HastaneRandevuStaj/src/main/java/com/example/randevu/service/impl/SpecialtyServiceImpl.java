@@ -32,4 +32,13 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     public Optional<Specialty> findById(Long id) {
         return specialtyRepository.findById(id);
     }
+
+    @Override
+    public void deleteSpecialtyById(Long id) {
+        if (specialtyRepository.existsById(id)) {
+            specialtyRepository.deleteById(id); // ID ile specialty silinir
+        } else {
+            throw new RuntimeException("Specialty not found with id: " + id);
+        }
+    }
 }

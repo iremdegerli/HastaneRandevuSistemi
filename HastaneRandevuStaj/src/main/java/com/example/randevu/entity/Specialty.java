@@ -18,6 +18,4 @@ public class Specialty {
 	@Column(nullable = false)
 	private String name;
 
-	public Specialty() {
-	}
 }

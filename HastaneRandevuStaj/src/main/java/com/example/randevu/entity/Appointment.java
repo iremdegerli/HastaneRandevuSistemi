@@ -1,5 +1,6 @@
 package com.example.randevu.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,19 +27,29 @@ public class Appointment {
 	@JoinColumn(name = "specialty_id")
 	private Specialty specialty;
 
-
-	@Column(nullable = false)
+	@Column
 	private String patientName;
 
-	@Column(nullable = false)
+	@Column
 	private String patientSurname;
 
-	@Column(nullable = false)
+	@Column
 	private String patientIdentityNumber;
 
-	@Column(nullable = false)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	@Column
 	private LocalDateTime appointmentDate;
 
-	@Column(nullable = false)
+	@Column
 	private Boolean isActive = true;
+
+	public void updateIsActive() {
+		if (this.appointmentDate.isAfter(LocalDateTime.now())) {
+			this.isActive = true;
+		} else {
+			this.isActive = false;
+		}
+	}
 }
+
+

@@ -1,7 +1,12 @@
 package com.example.randevu.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -34,7 +39,6 @@ public class User {
     @JoinColumn(name = "specialty_id")
     private Specialty specialty;
 
-
     @PrePersist
     @PreUpdate
     private void validateSpecialty() {
@@ -42,4 +46,8 @@ public class User {
             throw new RuntimeException("Specialty is required for doctors");
         }
     }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WorkingHours> workingHours;
 }

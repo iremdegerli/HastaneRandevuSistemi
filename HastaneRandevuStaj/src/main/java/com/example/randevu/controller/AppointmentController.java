@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/appointments")
+@CrossOrigin(origins = {"http://localhost:4200"})
 public class AppointmentController {
 
     @Autowired
@@ -28,25 +29,39 @@ public class AppointmentController {
     private SpecialtyService specialtyService;
 
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@RequestBody AppointmentRequest appointmentRequest ) {
-        Optional<User> doctor = userService.findById(appointmentRequest.getDoctorId());
-        Optional<Specialty> specialty = specialtyService.findById(appointmentRequest.getSpecialtyId());
+    public ResponseEntity<Appointment> createAppointment(@RequestBody AppointmentRequest appointmentRequest) {
+        try {
+            Optional<User> doctor = userService.findById(appointmentRequest.getDoctorId());
+            Optional<Specialty> specialty = specialtyService.findById(appointmentRequest.getSpecialtyId());
 
-        if (doctor.isPresent() && specialty.isPresent()) {
-            Appointment appointment = new Appointment();
-            appointment.setDoctor(doctor.get());
-            appointment.setSpecialty(specialty.get());
-            appointment.setPatientName(appointmentRequest.getPatientName());
-            appointment.setPatientSurname(appointmentRequest.getPatientSurname());
-            appointment.setPatientIdentityNumber(appointmentRequest.getPatientIdentityNumber());
-            appointment.setAppointmentDate(appointmentRequest.getAppointmentDate());
-            appointment.setIsActive(appointmentRequest.getIsActive());
+            if (doctor.isPresent() && specialty.isPresent()) {
+                Appointment appointment = new Appointment();
+                appointment.setDoctor(doctor.get());
+                appointment.setSpecialty(specialty.get());
+                appointment.setPatientName(appointmentRequest.getPatientName());
+                appointment.setPatientSurname(appointmentRequest.getPatientSurname());
+                appointment.setPatientIdentityNumber(appointmentRequest.getPatientIdentityNumber());
+                appointment.setAppointmentDate(appointmentRequest.getAppointmentDate());
+                appointment.updateIsActive();
 
-            Appointment createdAppointment = appointmentService.createAppointment(appointment);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdAppointment);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }    }
+                // Veritabanı işlemi burada
+                Appointment createdAppointment = appointmentService.createAppointment(appointment);
+                return ResponseEntity.status(HttpStatus.CREATED).body(createdAppointment);
+            } else {
+                return ResponseEntity.badRequest().body(null);
+            }
+        } catch (Exception e) {
+            // Hataları loglayın
+            System.err.println("Error while creating appointment: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Appointment>> getAllAppointments(){
+        return ResponseEntity.ok(appointmentService.findAllAppointments());
+    }
 
     @GetMapping("/doctors/{doctorId}")
     public ResponseEntity<List<Appointment>> getAppointmentsByDoctor(@PathVariable Long doctorId) {
@@ -55,8 +70,9 @@ public class AppointmentController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/patient/{identityNumber}")
+    @PostMapping("/patient/{identityNumber}")
     public ResponseEntity<List<Appointment>> getAppointmentsByPatientIdentityNumber(@PathVariable String identityNumber) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByPatientIdentityNumber(identityNumber));
     }
+
 }

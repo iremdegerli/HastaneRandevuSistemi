@@ -11,6 +11,6 @@ public interface SpecialtyService {
 
     List<Specialty> getAllSpecialties();
     Specialty createSpecialty(Specialty specialty) ;
-
+    void deleteSpecialtyById(Long id);
     Optional<Specialty> findById(Long id);
 }

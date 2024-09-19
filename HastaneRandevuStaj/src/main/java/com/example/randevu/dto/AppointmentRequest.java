@@ -3,6 +3,7 @@ package com.example.randevu.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+
 @Data
 public class AppointmentRequest {
     private Long doctorId;
@@ -11,7 +12,4 @@ public class AppointmentRequest {
     private String patientSurname;
     private String patientIdentityNumber;
     private LocalDateTime appointmentDate;
-    private Boolean isActive;
-
-    // Getter ve Setter metodları
 }

@@ -11,6 +11,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/doctors")
+@CrossOrigin(origins = {"http://localhost:4200"})
+
 public class DoctorController {
 
     @Autowired
@@ -27,5 +29,11 @@ public class DoctorController {
         List<User> doctors = userService.findAllDoctors();
         return ResponseEntity.ok(doctors);
     }
+    @GetMapping("/specialty/{specialtyId}")
+    public ResponseEntity<List<User>> getDoctorsBySpecialty(@PathVariable Long specialtyId) {
+        List<User> doctors = userService.findDoctorsBySpecialty(specialtyId);
+        return ResponseEntity.ok(doctors);
+    }
+
 
 }
