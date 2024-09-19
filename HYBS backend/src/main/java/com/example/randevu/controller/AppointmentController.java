@@ -70,9 +70,15 @@ public class AppointmentController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/patient/{identityNumber}")
+    @GetMapping("/patient/{identityNumber}")
     public ResponseEntity<List<Appointment>> getAppointmentsByPatientIdentityNumber(@PathVariable String identityNumber) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByPatientIdentityNumber(identityNumber));
     }
+
+    @PostMapping("/patient/{identityNumber}")
+    public ResponseEntity<List<Appointment>> getAppointmentsByPatient(@PathVariable String identityNumber) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByPatientIdentityNumber(identityNumber));
+    }
+
 
 }
