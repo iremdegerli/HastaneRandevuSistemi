@@ -175,10 +175,6 @@ export class AppointmentBookingComponent implements OnInit {
       );
   }
   
-
-
-  
-
   clearMessages() {
     setTimeout(() => {
       this.errorMessage = "";
