@@ -76,11 +76,28 @@ export class AppointmentBookingComponent implements OnInit {
   setAvailableHours(workingHours: any) {
     const startHour = workingHours.startTime.split(':')[0];
     const endHour = workingHours.endTime.split(':')[0];
+  
+    // Başlangıç ve bitiş saatleri arasındaki tüm saatleri availableHours'a ekle
     this.availableHours = [];
     for (let i = +startHour; i <= +endHour; i++) {
       this.availableHours.push(i + ":00");
     }
+  
+    // Eğer ek saatler varsa, bu saat aralıklarını availableHours'dan çıkar
+    if (workingHours.additionalHours && workingHours.additionalHours.length > 0) {
+      workingHours.additionalHours.forEach((additionalHour: any) => {
+        const additionalStart = +additionalHour.startTime.split(':')[0];
+        const additionalEnd = +additionalHour.endTime.split(':')[0];
+  
+        // Ek saat aralığını availableHours'dan çıkar
+        this.availableHours = this.availableHours.filter(hour => {
+          const hourInt = +hour.split(':')[0];
+          return !(hourInt >= additionalStart && hourInt <= additionalEnd);
+        });
+      });
+    }
   }
+  
 
   formatDate(date: Date): string {
     const pad = (num: number) => (num < 10 ? '0' + num : num);
